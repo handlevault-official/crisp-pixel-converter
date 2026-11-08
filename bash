@@ -1,6 +1,10 @@
-# Gumawa o i-save ang binigay kong index.html code sa folder mo
-# Pwede mong i-delete muna ang app.py kung di mo na gagamitin
-rm app.py
+# 1. Burahin ang mga hindi na kailangang Python files
+rm app.py requirements.txt
 
-# Gumawa ng index.html file
-touch index.html
+# 2. Siguraduhing nandiyan ang iyong bagong index.html na may arcade design at handlevault link
+# (I-paste mo rito ang index.html code kung wala pa)
+
+# 3. I-update ang GitHub repository
+git add .
+git commit -m "Clean up: Use pure HTML index.html arcade app"
+git push origin main
