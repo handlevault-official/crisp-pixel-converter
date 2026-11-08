@@ -3,17 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Art Crisp Scaler - 8-Bit Arcade Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <title>Pixel Art Crisp Scaler - Arcade Edition</title>
     <style>
-        :root {
-            --bg-color: #0d0f18;
-            --panel-bg: #161b22;
-            --neon-pink: #ff007f;
-            --neon-cyan: #00ffcc;
-            --neon-yellow: #f3e600;
-            --text-color: #c9d1d9;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
         * {
             box-sizing: border-box;
@@ -22,294 +14,200 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'VT323', monospace;
-            font-size: 22px;
-            overflow-x: hidden;
-            position: relative;
+            background-color: #0d0d12;
+            color: #00ffcc;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            line-height: 1.6;
+            padding: 20px;
+            /* CRT Scanline effect */
+            background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 6px 100%;
         }
 
-        /* CRT Scanline Effect */
-        body::after {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 99999;
-            background-size: 100% 4px, 6px 100%;
-            pointer-events: none;
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: #ff007f;
+            font-size: 18px;
+            text-shadow: 2px 2px #00ffcc;
+            margin-bottom: 10px;
         }
 
         .container {
             display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Arcade */
-        sidebar {
-            width: 320px;
-            background-color: var(--panel-bg);
-            border-right: 4px solid var(--neon-pink);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 20px;
-            box-shadow: 5px 0px 15px rgba(255, 0, 127, 0.2);
+            max-width: 1100px;
+            margin: 0 auto;
         }
 
-        sidebar h1 {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 14px;
-            color: var(--neon-cyan);
-            text-shadow: 2px 2px var(--neon-pink);
-            line-height: 1.4;
+        .sidebar, .main-content {
+            flex: 1 1 300px;
+            background: #151520;
+            border: 3px solid #ff007f;
+            padding: 20px;
+            box-shadow: 4px 4px 0px #00ffcc;
         }
 
-        .btn-arcade {
-            background-color: var(--neon-pink);
-            color: #fff;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 10px;
-            padding: 12px;
-            border: 3px solid var(--neon-cyan);
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
+        h2 {
+            font-size: 12px;
+            color: #ffcc00;
+            margin-bottom: 15px;
+            border-bottom: 2px dashed #ff007f;
+            padding-bottom: 8px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #c0c0c5;
+        }
+
+        .btn {
             display: block;
-            box-shadow: 4px 4px var(--neon-cyan);
-            transition: 0.1s;
+            width: 100%;
+            background: #ff007f;
+            color: #fff;
+            text-align: center;
+            padding: 12px;
+            text-decoration: none;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            border: 2px solid #00ffcc;
+            margin-bottom: 10px;
+            box-shadow: 3px 3px 0px #00ffcc;
+            transition: transform 0.1s ease;
         }
 
-        .btn-arcade:hover {
-            background-color: var(--neon-cyan);
-            color: var(--bg-color);
-            box-shadow: 2px 2px var(--neon-pink);
-            transform: translate(2px, 2px);
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0px #00ffcc;
         }
 
         .btn-kofi {
-            background-color: #29abe0;
-            border-color: var(--neon-yellow);
-            box-shadow: 4px 4px var(--neon-yellow);
-            color: #000;
+            background: #29abe0;
         }
 
-        /* Main Game Screen */
-        main {
-            flex: 1;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .screen-header {
-            border-bottom: 3px dashed var(--neon-cyan);
-            padding-bottom: 15px;
-        }
-
-        .screen-header h2 {
-            font-family: 'Press Start 2P', cursive;
-            color: var(--neon-yellow);
-            font-size: 18px;
-            text-shadow: 2px 2px var(--neon-pink);
-        }
-
-        .upload-box {
-            border: 3px dashed var(--neon-pink);
-            padding: 30px;
+        .drop-zone {
+            border: 3px dashed #ff007f;
+            padding: 30px 20px;
             text-align: center;
-            background: rgba(255, 0, 127, 0.03);
             cursor: pointer;
-            transition: 0.2s;
+            background: #1a1a29;
+            margin-bottom: 15px;
         }
 
-        .upload-box:hover {
-            background: rgba(255, 0, 127, 0.1);
-            border-color: var(--neon-cyan);
+        .drop-zone:hover {
+            background: #22223b;
         }
 
-        .controls {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            background: var(--panel-bg);
-            padding: 15px;
-            border: 2px solid var(--neon-cyan);
-        }
-
-        select {
-            background: var(--bg-color);
-            color: var(--neon-cyan);
-            border: 2px solid var(--neon-pink);
-            padding: 8px;
-            font-family: 'VT323', monospace;
-            font-size: 20px;
-            outline: none;
-        }
-
-        .preview-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .preview-card {
-            background: var(--panel-bg);
-            border: 2px solid var(--neon-pink);
-            padding: 15px;
-            text-align: center;
-        }
-
-        .preview-card h3 {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 11px;
-            color: var(--neon-cyan);
-            margin-bottom: 10px;
-        }
-
-        canvas, img {
+        canvas {
+            display: block;
             max-width: 100%;
             height: auto;
+            margin: 15px auto;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
-            border: 2px solid #333;
-            background: #000;
+            border: 2px solid #00ffcc;
         }
 
-        .hidden { display: none; }
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar, .main-content {
+                width: 100%;
+                flex: none;
+            }
+        }
     </style>
 </head>
 <body>
 
+    <header>
+        <h1>PIXEL ART CRISP SCALER</h1>
+        <p>100% Nearest-Neighbor Scaling for your indie assets!</p>
+    </header>
+
     <div class="container">
-        <!-- Arcade Sidebar -->
-        <sidebar>
-            <h1>PIXEL ARCADE TOOLS</h1>
-            <p style="font-size: 18px; color: var(--text-color);">100% Crisp Scaling para sa iyong indie game assets!</p>
+        <!-- Sidebar / Store & Support -->
+        <div class="sidebar">
+            <h2>STORE & BUNDLES</h2>
+            <p>Get professional asset packs for your game dev projects.</p>
+            <a href="#" class="btn">Itch.io Store</a>
+            <a href="#" class="btn">Gumroad Mega Pack</a>
+
+            <h2 style="margin-top: 30px;">SUPPORT</h2>
+            <p>Enjoying the tool? Fuel the development!</p>
+            <a href="https://ko-fi.com/handlevault" target="_blank" class="btn btn-kofi">Sponsor on Ko-fi</a>
+        </div>
+
+        <!-- Main Utility Area -->
+        <div class="main-content">
+            <h2>IMAGE SCALER</h2>
+            <p>Upload your pixel art to scale it cleanly without blur.</p>
             
-            <hr style="border: 1px solid #333;">
-            
-            <h3 style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--neon-yellow);">🛒 STORE & BUNDLES</h3>
-            <a href="https://itch.io" target="_blank" class="btn-arcade">🎮 Itch.io Store</a>
-            <a href="https://gumroad.com" target="_blank" class="btn-arcade">📦 Gumroad Mega Pack</a>
-
-            <hr style="border: 1px solid #333;">
-
-            <h3 style="font-family: 'Press Start 2P'; font-size: 10px; color: var(--neon-yellow);">☕ SUPPORT</h3>
-            <a href="https://ko-fi.com//handlevaultofficial" target="_blank" class="btn-arcade btn-kofi">💖 Sponsor on Ko-fi</a>
-        </sidebar>
-
-        <!-- Main Workspace -->
-        <main>
-            <div class="screen-header">
-                <h2>PIXEL ART CRISP SCALER</h2>
-                <p>I-upload ang iyong pixel art para sa nearest-neighbor scaling nang walang blur.</p>
+            <div class="drop-zone" id="dropZone">
+                [ CLICK OR DROP IMAGE HERE ]
+                <p style="font-size: 8px; margin-top: 10px;">Supports PNG, JPG, WebP</p>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
             </div>
 
-            <!-- Upload Zone -->
-            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-                <p style="font-family: 'Press Start 2P'; font-size: 12px; color: var(--neon-cyan);">[ MAG-CLICK O MAG-DROP NG IMAGE DITO ]</p>
-                <p style="font-size: 16px; margin-top: 5px;">Suportado ang PNG, JPG, at Transparent WebP</p>
-                <input type="file" id="fileInput" class="hidden" accept="image/png, image/jpeg, image/webp">
+            <div id="outputArea" style="text-align: center;">
+                <!-- Processed Canvas will appear here -->
             </div>
-
-            <!-- Controls & Previews (Hidden hangga't walang upload) -->
-            <div id="workspace" class="hidden">
-                <div class="controls">
-                    <label style="font-family: 'Press Start 2P'; font-size: 11px; color: var(--neon-yellow);">SCALE MULTIPLIER:</label>
-                    <select id="scaleSelect">
-                        <option value="2">2X Crisp</option>
-                        <option value="4" selected>4X Crisp</option>
-                        <option value="8">8X Crisp</option>
-                        <option value="16">16X Arcade</option>
-                    </select>
-                    <button class="btn-arcade" id="downloadBtn" style="margin-left: auto; padding: 8px 15px;">⬇️ DOWNLOAD SCALED</button>
-                </div>
-
-                <div class="preview-grid">
-                    <div class="preview-card">
-                        <h3>ORIGINAL IMAGE</h3>
-                        <div id="originalContainer"></div>
-                        <p id="originalInfo" style="margin-top: 8px; font-size: 18px;"></p>
-                    </div>
-                    <div class="preview-card">
-                        <h3>CRISP SCALED RESULT</h3>
-                        <canvas id="scaledCanvas"></canvas>
-                        <p id="scaledInfo" style="margin-top: 8px; font-size: 18px;"></p>
-                    </div>
-                </div>
-            </div>
-        </main>
+        </div>
     </div>
 
     <script>
+        const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
-        const workspace = document.getElementById('workspace');
-        const originalContainer = document.getElementById('originalContainer');
-        const originalInfo = document.getElementById('originalInfo');
-        const scaledCanvas = document.getElementById('scaledCanvas');
-        const scaledInfo = document.getElementById('scaledInfo');
-        const scaleSelect = document.getElementById('scaleSelect');
-        const downloadBtn = document.getElementById('downloadBtn');
+        const outputArea = document.getElementById('outputArea');
 
-        let uploadedImage = null;
+        dropZone.click = () => fileInput.click();
+        dropZone.addEventListener('click', () => fileInput.click());
 
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if (!file) return;
+            if (file) loadImage(file);
+        });
 
+        function loadImage(file) {
             const reader = new FileReader();
-            reader.onload = function(event) {
+            reader.onload = (event) => {
                 const img = new Image();
-                img.onload = function() {
-                    uploadedImage = img;
+                img.onload = () => {
+                    outputArea.innerHTML = '';
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
                     
-                    // Display Original
-                    originalContainer.innerHTML = '';
-                    const displayImg = document.createElement('img');
-                    displayImg.src = img.src;
-                    originalContainer.appendChild(displayImg);
-                    originalInfo.innerText = `Size: ${img.width} x ${img.height}px`;
+                    // Scale factor (e.g., 4x upscale)
+                    const scale = 4;
+                    canvas.width = img.width * scale;
+                    canvas.height = img.height * scale;
 
-                    workspace.classList.remove('hidden');
-                    processImage();
-                }
+                    // Enforce crisp nearest-neighbor rendering
+                    ctx.imageSmoothingEnabled = false;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    outputArea.appendChild(canvas);
+
+                    const downloadBtn = document.createElement('a');
+                    downloadBtn.href = canvas.toDataURL('image/png');
+                    downloadBtn.download = 'crisp-scaled-art.png';
+                    downloadBtn.className = 'btn';
+                    downloadBtn.style.marginTop = '15px';
+                    downloadBtn.innerText = 'Download Crisp PNG';
+                    outputArea.appendChild(downloadBtn);
+                };
                 img.src = event.target.result;
-            }
+            };
             reader.readAsDataURL(file);
-        });
-
-        function processImage() {
-            if (!uploadedImage) return;
-
-            const scale = parseInt(scaleSelect.value);
-            const newWidth = uploadedImage.width * scale;
-            const newHeight = uploadedImage.height * scale;
-
-            scaledCanvas.width = newWidth;
-            scaledCanvas.height = newHeight;
-
-            const ctx = scaledCanvas.getContext('2d');
-            ctx.imageSmoothingEnabled = false; // Nearest-neighbor secret sauce!
-            ctx.clearRect(0, 0, newWidth, newHeight);
-            ctx.drawImage(uploadedImage, 0, 0, newWidth, newHeight);
-
-            scaledInfo.innerText = `New Size: ${newWidth} x ${newHeight}px (${scale}X)`;
         }
-
-        scaleSelect.addEventListener('change', processImage);
-
-        downloadBtn.addEventListener('click', () => {
-            if (!uploadedImage) return;
-            const link = document.createElement('a');
-            link.download = `pixel_scaled_${scaleSelect.value}x.png`;
-            link.href = scaledCanvas.toDataURL('image/png');
-            link.link.click();
-            link.click();
-        });
     </script>
 </body>
 </html>
