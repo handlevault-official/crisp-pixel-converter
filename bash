@@ -1,10 +1,11 @@
-# 1. Burahin ang mga hindi na kailangang Python files
-rm app.py requirements.txt
+# 1. Alisin ang mga lumang python files (kung nandun pa)
+git rm app.py requirements.txt
 
-# 2. Siguraduhing nandiyan ang iyong bagong index.html na may arcade design at handlevault link
-# (I-paste mo rito ang index.html code kung wala pa)
+# 2. Siguraduhing nandiyan ang index.html at i-add lahat
+git add index.html
 
-# 3. I-update ang GitHub repository
-git add .
-git commit -m "Clean up: Use pure HTML index.html arcade app"
+# 3. I-commit ang mga pagbabago
+git commit -m "Deploy pure HTML retro arcade app to GitHub Pages"
+
+# 4. I-push sa GitHub
 git push origin main
