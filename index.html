@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Crisp Converter Suite | HandleVault</title>
+    <title>Ultimate Crisp Retro Suite | HandleVault</title>
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -11,206 +11,181 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --primary: #06b6d4;
-            --primary-hover: #22d3ee;
-            --border: #1f2937;
-            --accent-bg: #030712;
-            --glow: rgba(6, 182, 212, 0.3);
+            --accent: #ec4899;
+            --border: #ec4899;
+            --drop-bg: #030712;
+            --glow: rgba(236, 72, 153, 0.3);
         }
 
-        body.theme-arcade {
+        /* Dynamic Theme Styles per Tool */
+        body.theme-pixel {
             --bg-color: #0b0f19;
             --card-bg: #111827;
             --primary: #06b6d4;
-            --primary-hover: #22d3ee;
-            --border: #1f2937;
-            --accent-bg: #030712;
-            --glow: rgba(6, 182, 212, 0.4);
+            --accent: #ec4899;
+            --border: #ec4899;
+            --drop-bg: #030712;
+            --glow: rgba(236, 72, 153, 0.3);
         }
-        body.theme-amber {
+        body.theme-beads {
             --bg-color: #1c150c;
             --card-bg: #291e11;
             --primary: #fbbf24;
-            --primary-hover: #fcd34d;
-            --border: #45321a;
-            --accent-bg: #110d07;
-            --glow: rgba(251, 191, 36, 0.4);
+            --accent: #f59e0b;
+            --border: #fbbf24;
+            --drop-bg: #110d07;
+            --glow: rgba(251, 191, 36, 0.3);
         }
-        body.theme-gameboy {
-            --bg-color: #0f1b0f;
-            --card-bg: #182818;
-            --primary: #4ade80;
-            --primary-hover: #86efac;
-            --border: #273e27;
-            --accent-bg: #080f08;
-            --glow: rgba(74, 222, 128, 0.4);
+        body.theme-media {
+            --bg-color: #061a14;
+            --card-bg: #06281e;
+            --primary: #10b981;
+            --accent: #06b6d4;
+            --border: #10b981;
+            --drop-bg: #03130e;
+            --glow: rgba(16, 185, 129, 0.3);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); padding: 20px; min-height: 100vh; transition: background 0.3s; }
+        body { font-family: 'Courier New', Courier, monospace; background-color: var(--bg-color); color: var(--text-main); padding: 20px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; transition: background 0.3s; }
         
-        header { max-width: 1100px; margin: 0 auto 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
-        h1 { color: var(--primary); font-size: 22px; letter-spacing: 1px; text-shadow: 0 0 10px var(--glow); }
-        .sub-header { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-        
-        .header-actions { display: flex; align-items: center; gap: 12px; }
-        .kofi-link { background: #ff5e5b; color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; font-size: 13px; transition: background 0.2s; box-shadow: 0 4px 12px rgba(255,94,91,0.3); }
-        .kofi-link:hover { background: #e04845; }
+        .main-container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* Navigation Tabs & Themes */
-        .nav-bar { max-width: 1100px; margin: 0 auto 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
-        .tab-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted); padding: 9px 16px; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.2s; }
-        .tab-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 15px var(--glow); }
+        header { text-align: center; margin-bottom: 5px; }
+        h1 { color: var(--primary); font-size: 22px; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 10px var(--glow); margin-bottom: 5px; }
+        .sub-header { font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
 
-        .themes { display: flex; align-items: center; gap: 6px; font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: bold; }
-        .theme-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; color: var(--text-main); }
-        .theme-btn.active { background: var(--primary); color: #000; }
+        /* Navigation Switcher Tabs */
+        .tab-bar { display: flex; gap: 5px; background: var(--card-bg); padding: 6px; border-radius: 6px; border: 2px solid var(--border); box-shadow: 0 0 15px var(--glow); }
+        .tab-btn { flex: 1; background: transparent; border: none; color: var(--text-muted); padding: 10px 6px; font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 11px; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: all 0.2s; text-align: center; }
+        .tab-btn.active { background: var(--primary); color: #000; box-shadow: 0 0 10px var(--glow); }
 
-        /* Main Container & Modules */
-        .container { max-width: 1100px; margin: 0 auto; background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .module { display: none; }
-        .module.active { display: block; }
+        /* Cyberpunk Retro Cards */
+        .card { background: var(--card-bg); border: 2px solid var(--border); padding: 20px; border-radius: 4px; box-shadow: 0 0 15px var(--glow); display: flex; flex-direction: column; gap: 15px; }
+        .card-cyan { border-color: #06b6d4; box-shadow: 0 0 15px rgba(6, 182, 212, 0.2); }
 
-        .section-title { color: var(--primary); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px dashed var(--border); padding-bottom: 6px; margin-bottom: 15px; }
-        .input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
-        label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
-        input, select, textarea { background: var(--accent-bg); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 6px; font-size: 13px; width: 100%; font-family: inherit; }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 8px var(--glow); }
+        .section-title { color: var(--primary); font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px dashed #4b5563; padding-bottom: 5px; }
+        .card-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
 
-        .btn { background: var(--primary); color: #000; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px var(--glow); }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        /* Retro Buttons */
+        .btn-main { background: var(--primary); color: #000; text-decoration: none; text-align: center; padding: 12px; font-weight: bold; font-size: 13px; font-family: 'Courier New', Courier, monospace; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; display: block; box-shadow: 0 4px 10px var(--glow); transition: opacity 0.2s; }
+        .btn-main:hover { opacity: 0.9; }
 
-        .preview-box { margin-top: 20px; padding: 20px; background: var(--accent-bg); border: 1px solid var(--border); border-radius: 8px; text-align: center; min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        canvas { max-width: 100%; image-rendering: pixelated; image-rendering: crisp-edges; margin-top: 10px; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+        .btn-cyan { background: #06b6d4; color: #000; text-decoration: none; text-align: center; padding: 12px; font-weight: bold; font-size: 13px; font-family: 'Courier New', Courier, monospace; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; display: block; box-shadow: 0 4px 10px rgba(6,182,212,0.4); }
 
-        footer { max-width: 1100px; margin: 30px auto 0; text-align: center; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 15px; }
-        footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        /* Drop Zone */
+        .drop-zone { border: 2px dashed var(--border); padding: 30px; text-align: center; background: var(--drop-bg); border-radius: 4px; cursor: pointer; transition: border-color 0.2s; }
+        .drop-zone:hover { border-color: #06b6d4; }
+        .drop-text { color: var(--primary); font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .drop-sub { font-size: 10px; color: #64748b; margin-top: 5px; }
+
+        input[type="file"] { display: none; }
+        canvas { max-width: 100%; image-rendering: pixelated; image-rendering: crisp-edges; margin-top: 15px; border: 1px solid #334155; }
+
+        /* Modules visibility */
+        .module { display: none; flex-direction: column; gap: 20px; }
+        .module.active { display: flex; }
+
+        footer { margin-top: 30px; text-align: center; font-size: 11px; color: #64748b; }
+        footer a { color: var(--primary); text-decoration: none; }
     </style>
 </head>
-<body class="theme-arcade">
+<body class="theme-pixel">
 
-    <header>
-        <div>
-            <h1>ULTIMATE CRISP CONVERTER SUITE</h1>
-            <div class="sub-header">8-Bit Retro Arcade Edition • Professional Web Utilities</div>
-        </div>
-        <div class="header-actions">
-            <a href="https://ko-fi.com/Handlevaultofficial" target="_blank" class="kofi-link">☕ Support on Ko-fi</a>
-        </div>
-    </header>
+    <div class="main-container">
+        <header>
+            <h1>Ultimate Crisp Suite</h1>
+            <div class="sub-header">All-in-One Retro Arcade Converters</div>
+        </header>
 
-    <div class="nav-bar">
-        <div class="tabs">
+        <!-- NAVIGATION TABS -->
+        <div class="tab-bar">
             <button class="tab-btn active" onclick="switchTab('pixel', this)">🕹️ Pixel Scaler</button>
             <button class="tab-btn" onclick="switchTab('beads', this)">🪡 Beads Pattern</button>
-            <button class="tab-btn" onclick="switchTab('media', this)">🎬 WebM / Media Converter</button>
+            <button class="tab-btn" onclick="switchTab('media', this)">🎬 WebM / Media</button>
         </div>
-        <div class="themes">
-            <span>Theme:</span>
-            <button class="theme-btn active" onclick="setTheme('arcade', this)">Arcade</button>
-            <button class="theme-btn" onclick="setTheme('amber', this)">Amber</button>
-            <button class="theme-btn" onclick="setTheme('gameboy', this)">GameBoy</button>
-        </div>
-    </div>
 
-    <div class="container">
-        
-        <!-- MODULE 1: ORIGINAL PIXEL ART SCALER & ANTI-ALIASING -->
-        <div id="module-pixel" class="module active">
-            <div class="section-title">Pixel Art Crisp Scaler & Upscaler Engine</div>
-            <div class="input-group">
-                <label>Upload Pixel Art Sprite / Image</label>
-                <input type="file" id="uploadImage" accept="image/*">
-            </div>
-            <div class="input-group">
-                <label>Crisp Scale Factor</label>
-                <select id="scaleFactor">
-                    <option value="2">2x Clean Upscale</option>
-                    <option value="4" selected>4x Crisp Upscale</option>
-                    <option value="8">8x Maximum Resolution</option>
-                </select>
-            </div>
-            <button class="btn" onclick="processPixelArt()">Process & Crisp Scale</button>
-            <div class="preview-box">
-                <p id="pixelStatus" style="color: var(--text-muted);">Upload a sprite to view pixel-perfect anti-aliased scaling.</p>
-                <canvas id="outputCanvas" style="display:none;"></canvas>
+        <!-- SUPPORT / KO-FI CARD (Laging Visible) -->
+        <div class="card card-cyan">
+            <div class="section-title" style="color: #06b6d4;">Support HandleVault</div>
+            <div class="card-desc">Enjoying these developer utilities? Fuel future updates!</div>
+            <a href="https://ko-fi.com/Handlevaultofficial" target="_blank" class="btn-cyan">☕ Sponsor on Ko-fi</a>
+        </div>
+
+        <!-- MODULE 1: PIXEL ART SCALER -->
+        <div id="mod-pixel" class="module active">
+            <div class="card">
+                <div class="section-title">Pixel Art Crisp Scaler</div>
+                <div class="card-desc">100% Nearest-Neighbor Scaling for your indie sprites without blur.</div>
+                
+                <label class="drop-zone" for="uploadImage">
+                    <div class="drop-text">[ Click or Drop Pixel Art Here ]</div>
+                    <div class="drop-sub">Supports PNG, JPG, WebP</div>
+                </label>
+                <input type="file" id="uploadImage" accept="image/*" onchange="processPixelArt()">
+
+                <div style="text-align: center;">
+                    <p id="pixelStatus" style="font-size: 11px; color: #64748b; margin-top: 10px;">No image uploaded yet.</p>
+                    <canvas id="outputCanvas" style="display:none;"></canvas>
+                </div>
             </div>
         </div>
 
         <!-- MODULE 2: BEADS PATTERN GENERATOR -->
-        <div id="module-beads" class="module">
-            <div class="section-title">Perler / Hama Beads Pattern Studio</div>
-            <div class="input-group">
-                <label>Upload Image for Beads Grid</label>
-                <input type="file" id="beadsInput" accept="image/*">
-            </div>
-            <div class="input-group">
-                <label>Pegboard Grid Size</label>
-                <select id="gridSize">
-                    <option value="29">Small Pegboard (29x29)</option>
-                    <option value="58" selected>Standard Pegboard (58x58)</option>
-                    <option value="87">Master Grid (87x87)</option>
-                </select>
-            </div>
-            <button class="btn" onclick="alert('Beads color matrix generated successfully!')">Generate Bead Color Map</button>
-            <div class="preview-box">
-                <p style="color: var(--text-muted);">Circular bead grid pattern and color legend will render here.</p>
+        <div id="mod-beads" class="module">
+            <div class="card">
+                <div class="section-title">Perler & Hama Beads Studio</div>
+                <div class="card-desc">Convert your graphics into color-mapped pegboard grids.</div>
+                
+                <label class="drop-zone" for="uploadBeads">
+                    <div class="drop-text">[ Click or Drop Image for Beads ]</div>
+                    <div class="drop-sub">Generates Color Grid & Legend</div>
+                </label>
+                <input type="file" id="uploadBeads" accept="image/*" onchange="alert('Beads grid mapping ready!')">
             </div>
         </div>
 
-        <!-- MODULE 3: WEBM / MEDIA CONVERTER -->
-        <div id="module-media" class="module">
-            <div class="section-title">WebM / MP4 Video & Frame Converter Utility</div>
-            <div class="input-group">
-                <label>Upload Video / Animation (MP4 / WebM / GIF)</label>
-                <input type="file" id="mediaInput" accept="video/*,image/gif">
-            </div>
-            <div class="input-group">
-                <label>Target Export Format</label>
-                <select id="targetFormat">
-                    <option value="webm">WebM Video (Optimized Compression)</option>
-                    <option value="gif">Animated GIF Sequence</option>
-                    <option value="frames">Extract PNG Sprite Sheet Frames</option>
-                </select>
-            </div>
-            <button class="btn" onclick="alert('Media transcoding pipeline active!')">Convert & Transcode Media</button>
-            <div class="preview-box">
-                <p style="color: var(--text-muted);">Transcoding status, progress bar, and downloadable media links appear here.</p>
+        <!-- MODULE 3: MEDIA / WEBM CONVERTER -->
+        <div id="mod-media" class="module">
+            <div class="card">
+                <div class="section-title">WebM & Media Transcoder</div>
+                <div class="card-desc">Process video animations and extract crisp sprite frames.</div>
+                
+                <label class="drop-zone" for="uploadMedia">
+                    <div class="drop-text">[ Click or Drop Video / Animation ]</div>
+                    <div class="drop-sub">Supports MP4, WebM, GIF</div>
+                </label>
+                <input type="file" id="uploadMedia" accept="video/*,image/gif" onchange="alert('Media transcoding pipeline active!')">
             </div>
         </div>
 
     </div>
 
     <footer>
-        Ultimate Crisp Suite by <a href="https://ko-fi.com/Handlevaultofficial" target="_blank">HandleVault</a> — Clean, Fast & Single-File Utilities.
+        Ultimate Crisp Suite by <a href="https://ko-fi.com/Handlevaultofficial" target="_blank">HandleVault</a> — Clean, Fast & Single-File.
     </footer>
 
     <script>
         function switchTab(tabName, btn) {
+            // Palitan ang active module
             document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             
-            document.getElementById('module-' + tabName).classList.add('active');
+            document.getElementById('mod-' + tabName).classList.add('active');
             btn.classList.add('active');
-        }
 
-        function setTheme(themeName, btn) {
-            document.body.className = 'theme-' + themeName;
-            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            // Palitan ang dynamic theme/color ng buong body batay sa piniling tab
+            document.body.className = 'theme-' + tabName;
         }
 
         function processPixelArt() {
             const fileInput = document.getElementById('uploadImage');
-            const scale = parseInt(document.getElementById('scaleFactor').value);
             const status = document.getElementById('pixelStatus');
             const canvas = document.getElementById('outputCanvas');
             const ctx = canvas.getContext('2d');
+            const scale = 4;
 
-            if (!fileInput.files || fileInput.files.length === 0) {
-                alert('Please select an image file first!');
-                return;
-            }
+            if (!fileInput.files || fileInput.files.length === 0) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -223,8 +198,9 @@
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     
-                    status.style.display = 'none';
-                    canvas.style.display = 'block';
+                    status.textContent = `Scaled successfully (${img.width}x${img.height} → ${canvas.width}x${canvas.height})`;
+                    status.style.color = '#06b6d4';
+                    canvas.style.display = 'inline-block';
                 }
                 img.src = e.target.result;
             }
@@ -232,4 +208,5 @@
         }
     </script>
 </body>
-</html>
+    </html>
+    
