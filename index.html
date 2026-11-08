@@ -285,4 +285,31 @@
         function processImage() {
             if (!uploadedImage) return;
 
-            const scale = parseInt(scaleSelect.value
+            const scale = parseInt(scaleSelect.value);
+            const newWidth = uploadedImage.width * scale;
+            const newHeight = uploadedImage.height * scale;
+
+            scaledCanvas.width = newWidth;
+            scaledCanvas.height = newHeight;
+
+            const ctx = scaledCanvas.getContext('2d');
+            ctx.imageSmoothingEnabled = false; // Nearest-neighbor secret sauce!
+            ctx.clearRect(0, 0, newWidth, newHeight);
+            ctx.drawImage(uploadedImage, 0, 0, newWidth, newHeight);
+
+            scaledInfo.innerText = `New Size: ${newWidth} x ${newHeight}px (${scale}X)`;
+        }
+
+        scaleSelect.addEventListener('change', processImage);
+
+        downloadBtn.addEventListener('click', () => {
+            if (!uploadedImage) return;
+            const link = document.createElement('a');
+            link.download = `pixel_scaled_${scaleSelect.value}x.png`;
+            link.href = scaledCanvas.toDataURL('image/png');
+            link.link.click();
+            link.click();
+        });
+    </script>
+</body>
+</html>
