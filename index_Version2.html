@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11131b">
+  <title>Pixel Studio — All-in-One Pixel Art</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #11131b;
+      --panel: #191c27;
+      --panel-2: #202431;
+      --line: #303646;
+      --text: #f3f4f8;
+      --muted: #9da5b7;
+      --accent: #bd9cff;
+      --accent-2: #a684f0;
+      --good: #9be4c6;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; color: var(--text); background: var(--bg); }
+    button, input, select { font: inherit; }
+    button {
+      color: var(--text); background: var(--panel-2); border: 1px solid var(--line);
+      border-radius: 9px; padding: 9px 11px; cursor: pointer;
+    }
+    button:hover { border-color: #72658d; background: #292e3d; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--accent); outline-offset: 2px;
+    }
+    input, select {
+      color: var(--text); background: #12151f; border: 1px solid var(--line);
+      border-radius: 8px; padding: 8px 9px;
+    }
+    input[type="color"] { width: 40px; height: 36px; padding: 3px; cursor: pointer; }
+    input[type="range"] { padding: 0; accent-color: var(--accent); }
+    .app { max-width: 1500px; margin: auto; padding: 22px clamp(14px, 3vw, 40px) 40px; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 43px; height: 43px; display: grid; place-items: center; border-radius: 13px;
+      background: linear-gradient(140deg, #533d79, #28243d); border: 1px solid #6b588f;
+      color: #eadfff; font-size: 21px;
+    }
+    h1 { margin: 0; font-size: 22px; letter-spacing: -.04em; }
+    .tagline { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+    .header-actions, .toolbar, .button-row { display: flex; flex-wrap: wrap; gap: 7px; }
+    .primary { color: #211a2d; background: var(--accent); border-color: transparent; font-weight: 700; }
+    .primary:hover { color: #211a2d; background: #d0baff; }
+    .support { color: #ffd5e1; text-decoration: none; font-size: 12px; padding: 9px 10px; }
+    .support:hover { color: white; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 285px; gap: 16px; align-items: start; }
+    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
+    .editor { overflow: hidden; }
+    .toolbar { padding: 12px; border-bottom: 1px solid var(--line); }
+    .toolbar button { min-width: 39px; padding: 8px 10px; font-size: 12px; }
+    .toolbar button.active { border-color: var(--accent); background: #3a3150; }
+    .stage {
+      display: grid; place-items: center; min-height: 440px; padding: 22px;
+      overflow: auto; background-color: #161a25;
+      background-image: linear-gradient(45deg, #202431 25%, transparent 25%),
+        linear-gradient(-45deg, #202431 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #202431 75%),
+        linear-gradient(-45deg, transparent 75%, #202431 75%);
+      background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+    }
+    #artCanvas { display: block; max-width: 100%; max-height: 70vh; image-rendering: pixelated; touch-action: none; cursor: crosshair; }
+    .stage.empty #artCanvas { display: none; }
+    .empty-note { color: var(--muted); text-align: center; line-height: 1.7; }
+    .stage:not(.empty) .empty-note { display: none; }
+    .statusbar {
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 9px; padding: 10px 13px;
+      color: var(--muted); border-top: 1px solid var(--line); font-size: 11px;
+    }
+    .sidebar { padding: 14px; }
+    .section + .section { margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
+    h2 { margin: 0 0 11px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+    .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .field { min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    label { display: block; margin-bottom: 5px; color: #c3c8d5; font-size: 11px; }
+    .field input, .field select { width: 100%; min-width: 0; }
+    .wide { width: 100%; }
+    .hint { margin: 8px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .swatch-row { display: flex; align-items: center; gap: 9px; }
+    .frames { display: flex; align-items: center; gap: 7px; margin-top: 9px; overflow-x: auto; }
+    .frame-thumb { flex: 0 0 56px; padding: 3px; }
+    .frame-thumb.active { border-color: var(--accent); }
+    .frame-thumb canvas { display: block; width: 48px; height: 40px; object-fit: contain; image-rendering: pixelated; }
+    .gallery-list { display: grid; gap: 7px; max-height: 190px; overflow: auto; margin-top: 9px; }
+    .gallery-item { display: flex; align-items: center; gap: 8px; padding: 7px; text-align: left; }
+    .gallery-item img { width: 43px; height: 36px; object-fit: contain; background: #11131b; image-rendering: pixelated; border-radius: 4px; }
+    .gallery-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+    .small { padding: 7px 8px; font-size: 11px; }
+    .separator { height: 1px; background: var(--line); margin: 9px 0; }
+    .modal {
+      position: fixed; inset: 0; z-index: 5; display: none; place-items: center;
+      padding: 20px; background: #080910dd;
+    }
+    .modal.open { display: grid; }
+    .modal-card { width: min(950px, 96vw); max-height: 92vh; padding: 14px; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    #viewerImage { display: block; max-width: 100%; max-height: 76vh; margin: auto; object-fit: contain; image-rendering: pixelated; }
+    .toast {
+      position: fixed; z-index: 10; right: 18px; bottom: 18px; padding: 11px 14px;
+      color: var(--text); background: #28243a; border: 1px solid #65547e; border-radius: 9px;
+      opacity: 0; transform: translateY(8px); transition: .2s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .hidden { display: none !important; }
+    @media (max-width: 850px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+      .section + .section { margin: 0; padding: 0; border: 0; }
+      .section:nth-child(n+3) { margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
+    }
+    @media (max-width: 560px) {
+      header { align-items: flex-start; }
+      .header-actions { justify-content: flex-end; }
+      .header-actions button, .header-actions a { padding: 8px; font-size: 11px; }
+      .sidebar { display: block; }
+      .section + .section { margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
+      .stage { min-height: 300px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">▦</div>
+        <div>
+          <h1>Pixel Studio</h1>
+          <p class="tagline">Create, edit, animate, convert and share pixel art</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a class="support" href="https://ko-fi.com/handlevaultofficial" target="_blank" rel="noopener noreferrer">☕ Buy me a Ko-fi</a>
+        <button id="openButton">Open</button>
+        <button id="saveButton">Save</button>
+        <button class="primary" id="exportButton">Export</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <section class="panel editor" aria-label="Pixel art editor">
+        <div class="toolbar" role="toolbar" aria-label="Drawing tools">
+          <button class="active" data-tool="pencil" title="Pencil (B)">✎ Pencil</button>
+          <button data-tool="eraser" title="Eraser (E)">⌫ Eraser</button>
+          <button data-tool="fill" title="Bucket fill (G)">▨ Fill</button>
+          <button data-tool="picker" title="Color picker (I)">◉ Pick</button>
+          <button id="undoButton" title="Undo">↶ Undo</button>
+          <button id="redoButton" title="Redo">↷ Redo</button>
+          <button id="cropButton" title="Crop to selection">Crop</button>
+          <button id="cutButton" title="Cut selected area">Cut</button>
+          <button id="viewButton" title="Open image viewer">View</button>
+        </div>
+
+        <div class="stage empty" id="stage">
+          <canvas id="artCanvas" aria-label="Pixel art canvas"></canvas>
+          <div class="empty-note">
+            <strong>Start creating</strong><br>
+            Open an image, or enter a canvas size and choose New canvas.
+          </div>
+        </div>
+
+        <div class="statusbar">
+          <span id="dimensionsLabel">No canvas</span>
+          <span id="cursorLabel">Tool: Pencil</span>
+          <span id="zoomLabel">Pixel-perfect canvas</span>
+        </div>
+      </section>
+
+      <aside class="panel sidebar" aria-label="Studio controls">
+        <section class="section">
+          <h2>New / import</h2>
+          <div class="controls">
+            <div class="field"><label for="widthInput">Width (px)</label><input id="widthInput" type="number" min="1" max="512" value="32"></div>
+            <div class="field"><label for="heightInput">Height (px)</label><input id="heightInput" type="number" min="1" max="512" value="32"></div>
+            <button class="wide field full" id="newButton">New canvas</button>
+            <button class="wide field full" id="importButton">Import image</button>
+            <input id="fileInput" type="file" accept="image/*,.json" class="hidden">
+          </div>
+          <p class="hint">Imported images are resized to the chosen canvas dimensions.</p>
+        </section>
+
+        <section class="section">
+          <h2>Brush & selection</h2>
+          <div class="controls">
+            <div class="field"><label for="colorInput">Brush color</label><div class="swatch-row"><input id="colorInput" type="color" value="#bd9cff"><button class="small" id="eyedropperButton" title="Pick color">Pick</button></div></div>
+            <div class="field"><label for="brushSize">Brush size</label><input id="brushSize" type="number" min="1" max="32" value="1"></div>
+            <div class="field full"><label for="zoomInput">Display zoom</label><input id="zoomInput" type="range" min="2" max="24" value="12"></div>
+          </div>
+          <p class="hint">Drag to draw. Use Crop or Cut after dragging a rectangular selection with the pencil tool and holding Shift.</p>
+        </section>
+
+        <section class="section">
+          <h2>Animation</h2>
+          <div class="button-row">
+            <button class="small" id="addFrameButton">＋ Add frame</button>
+            <button class="small" id="duplicateFrameButton">Duplicate</button>
+            <button class="small" id="deleteFrameButton">Delete frame</button>
+          </div>
+          <div class="frames" id="frames"></div>
+          <div class="controls" style="margin-top:9px">
+            <div class="field"><label for="fpsInput">FPS</label><input id="fpsInput" type="number" min="1" max="24" value="6"></div>
+            <div class="field"><label>Playback</label><button class="wide" id="playButton">▶ Play</button></div>
+          </div>
+          <button class="wide small" id="exportAnimationButton" style="margin-top:8px">Export animation (WebM)</button>
+          <p class="hint">Animated export uses WebM recording support in your browser.</p>
+        </section>
+
+        <section class="section">
+          <h2>Convert / export</h2>
+          <div class="controls">
+            <div class="field"><label for="formatSelect">Image format</label>
+              <select id="formatSelect"><option value="image/png">PNG</option><option value="image/jpeg">JPEG</option><option value="image/webp">WebP</option></select>
+            </div>
+            <div class="field"><label for="qualityInput">Quality</label><input id="qualityInput" type="number" min="10" max="100" value="92"></div>
+            <div class="field full"><button class="wide" id="downloadImageButton">Download current frame</button></div>
+            <div class="field full"><button class="wide" id="shareButton">Share / copy image</button></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>My saved studio</h2>
+          <div class="controls">
+            <div class="field full"><input class="wide" id="searchInput" type="search" placeholder="Search saved projects…" aria-label="Search saved projects"></div>
+            <button class="small" id="saveGalleryButton">Save to gallery</button>
+            <button class="small" id="downloadProjectButton">Save project file</button>
+            <button class="small" id="openProjectButton">Open project file</button>
+          </div>
+          <div class="gallery-list" id="galleryList"></div>
+          <p class="hint">Gallery projects are stored in this browser. Download a project file for a portable backup.</p>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <div class="modal" id="viewerModal" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <div class="modal-card">
+      <div class="modal-head"><strong>Image viewer</strong><button id="closeViewer">Close</button></div>
+      <img id="viewerImage" alt="Current pixel art preview">
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById("artCanvas");
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      const stage = document.getElementById("stage");
+      const framesEl = document.getElementById("frames");
+      const MAX_DIMENSION = 512;
+      const STORE_KEY = "pixel-studio-gallery-v1";
+
+      let frames = [];
+      let currentFrame = 0;
+      let tool = "pencil";
+      let drawing = false;
+      let selection = null;
+      let selectionStart = null;
+      let undoStack = [];
+      let redoStack = [];
+      let animationTimer = null;
+      let toastTimer = null;
+
+      const $ = id => document.getElementById(id);
+      const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
+      function notify(message) {
+        const toast = $("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2300);
+      }
+
+      function activeFrame() { return frames[currentFrame]; }
+      function imageFromCanvas(source) {
+        const c = document.createElement("canvas");
+        c.width = source.width; c.height = source.height;
+        c.getContext("2d").drawImage(source, 0, 0);
+        return c;
+      }
+
+      function setCanvasSize(width, height) {
+        width = clamp(Math.round(width) || 32, 1, MAX_DIMENSION);
+        height = clamp(Math.round(height) || 32, 1, MAX_DIMENSION);
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.width = `${width * Number($("zoomInput").value)}px`;
+        canvas.style.height = `${height * Number($("zoomInput").value)}px`;
+        $("widthInput").value = width;
+        $("heightInput").value = height;
+        $("dimensionsLabel").textContent = `${width} × ${height} px · frame ${currentFrame + 1}/${frames.length}`;
+        stage.classList.toggle("empty", frames.length === 0);
+      }
+
+      function setFrames(newFrames, index = 0) {
+        frames = newFrames;
+        currentFrame = clamp(index, 0, Math.max(0, frames.length - 1));
+        undoStack = []; redoStack = []; selection = null;
+        if (frames.length) {
+          setCanvasSize(frames[currentFrame].width, frames[currentFrame].height);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(frames[currentFrame], 0, 0);
+        } else {
+          canvas.width = 1; canvas.height = 1;
+          stage.classList.add("empty");
+          $("dimensionsLabel").textContent = "No canvas";
+        }
+        renderFrames();
+        updateHistoryButtons();
+      }
+
+      function newCanvas(width, height, color = "transparent") {
+        width = clamp(parseInt(width, 10) || 32, 1, MAX_DIMENSION);
+        height = clamp(parseInt(height, 10) || 32, 1, MAX_DIMENSION);
+        const frame = document.createElement("canvas");
+        frame.width = width; frame.height = height;
+        if (color !== "transparent") {
+          const fctx = frame.getContext("2d");
+          fctx.fillStyle = color; fctx.fillRect(0, 0, width, height);
+        }
+        setFrames([frame]);
+        notify("New canvas ready");
+      }
+
+      function saveVisibleToFrame() {
+        if (!frames.length) return;
+        const frame = activeFrame();
+        if (frame.width !== canvas.width || frame.height !== canvas.height) {
+          frame.width = canvas.width; frame.height = canvas.height;
+        }
+        frame.getContext("2d").clearRect(0, 0, frame.width, frame.height);
+        frame.getContext("2d").drawImage(canvas, 0, 0);
+      }
+
+      function snapshot() {
+        if (!frames.length) return;
+        undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        if (undoStack.length > 50) undoStack.shift();
+        redoStack = [];
+        updateHistoryButtons();
+      }
+
+      function restoreHistory(from, to) {
+        if (!from.length || !frames.length) return;
+        to.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        ctx.putImageData(from.pop(), 0, 0);
+        saveVisibleToFrame();
+        updateHistoryButtons();
+        renderFrames();
+      }
+
+      function updateHistoryButtons() {
+        $("undoButton").disabled = undoStack.length === 0;
+        $("redoButton").disabled = redoStack.length === 0;
+      }
+
+      function render() {
+        if (!frames.length) return;
+        setCanvasSize(canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(activeFrame(), 0, 0);
+        if (selection) {
+          const x = Math.min(selection.x, selection.x + selection.w);
+          const y = Math.min(selection.y, selection.y + selection.h);
+          const w = Math.abs(selection.w), h = Math.abs(selection.h);
+          ctx.save();
+          ctx.strokeStyle = "#fff";
+          ctx.lineWidth = Math.max(1 / Number($("zoomInput").value), 0.1);
+          ctx.setLineDash([2, 2]);
+          ctx.strokeRect(x + .5, y + .5, w, h);
+          ctx.restore();
+        }
+      }
+
+      function renderFrames() {
+        framesEl.innerHTML = "";
+        frames.forEach((frame, index) => {
+          const button = document.createElement("button");
+          button.className = "frame-thumb" + (index === currentFrame ? " active" : "");
+          button.title = `Frame ${index + 1}`;
+          const thumb = document.createElement("canvas");
+          thumb.width = frame.width; thumb.height = frame.height;
+          thumb.getContext("2d").drawImage(frame, 0, 0);
+          button.appendChild(thumb);
+          button.addEventListener("click", () => switchFrame(index));
+          framesEl.appendChild(button);
+        });
+        if (frames.length) $("dimensionsLabel").textContent =
+          `${canvas.width} × ${canvas.height} px · frame ${currentFrame + 1}/${frames.length}`;
+      }
+
+      function switchFrame(index) {
+        if (!frames.length) return;
+        saveVisibleToFrame();
+        currentFrame = index;
+        selection = null;
+        setCanvasSize(activeFrame().width, activeFrame().height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(activeFrame(), 0, 0);
+        renderFrames();
+      }
+
+      function pointFromEvent(event) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+          x: clamp(Math.floor((event.clientX - rect.left) * canvas.width / rect.width), 0, canvas.width - 1),
+          y: clamp(Math.floor((event.clientY - rect.top) * canvas.height / rect.height), 0, canvas.height - 1)
+        };
+      }
+
+      function paint(point) {
+        if (!frames.length) return;
+        const size = clamp(parseInt($("brushSize").value, 10) || 1, 1, 32);
+        const color = tool === "eraser" ? "rgba(0,0,0,0)" : $("colorInput").value;
+        if (tool === "picker") {
+          const pixel = ctx.getImageData(point.x, point.y, 1, 1).data;
+          if (pixel[3]) $("colorInput").value = "#" + [...pixel].slice(0, 3).map(v => v.toString(16).padStart(2, "0")).join("");
+          return;
+        }
+        if (tool === "fill") { floodFill(point.x, point.y, $("colorInput").value); return; }
+
+        if (tool === "eraser") ctx.clearRect(point.x - Math.floor(size / 2), point.y - Math.floor(size / 2), size, size);
+        else {
+          ctx.fillStyle = color;
+          ctx.fillRect(point.x - Math.floor(size / 2), point.y - Math.floor(size / 2), size, size);
+        }
+        saveVisibleToFrame();
+        renderFrames();
+      }
+
+      function floodFill(startX, startY, hex) {
+        const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = image.data, width = canvas.width, height = canvas.height;
+        const start = (startY * width + startX) * 4;
+        const target = [data[start], data[start + 1], data[start + 2], data[start + 3]];
+        const fill = [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16), 255];
+        if (target.every((v, i) => v === fill[i])) return;
+        const stack = [[startX, startY]];
+        while (stack.length) {
+          const [x, y] = stack.pop();
+          if (x < 0 || y < 0 || x >= width || y >= height) continue;
+          const i = (y * width + x) * 4;
+          if (data[i] !== target[0] || data[i + 1] !== target[1] ||
+              data[i + 2] !== target[2] || data[i + 3] !== target[3]) continue;
+          data[i] = fill[0]; data[i + 1] = fill[1]; data[i + 2] = fill[2]; data[i + 3] = fill[3];
+          stack.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+        }
+        ctx.putImageData(image, 0, 0);
+        saveVisibleToFrame(); renderFrames();
+      }
+
+      function pointerDown(event) {
+        if (!frames.length) return;
+        canvas.setPointerCapture(event.pointerId);
+        const point = pointFromEvent(event);
+        if (event.shiftKey) {
+          drawing = true; selectionStart = point;
+          selection = { x: point.x, y: point.y, w: 1, h: 1 };
+          render();
+          return;
+        }
+        drawing = true;
+        snapshot();
+        paint(point);
+      }
+
+      function pointerMove(event) {
+        if (!drawing) return;
+        const point = pointFromEvent(event);
+        if (selectionStart) {
+          selection = { x: selectionStart.x, y: selectionStart.y,
+            w: point.x - selectionStart.x + 1, h: point.y - selectionStart.y + 1 };
+          render();
+        } else if (tool === "pencil" || tool === "eraser") paint(point);
+      }
+
+      function pointerUp() {
+        drawing = false;
+        selectionStart = null;
+        saveVisibleToFrame();
+        renderFrames();
+      }
+
+      canvas.addEventListener("pointerdown", pointerDown);
+      canvas.addEventListener("pointermove", pointerMove);
+      canvas.addEventListener("pointerup", pointerUp);
+      canvas.addEventListener("pointercancel", pointerUp);
+
+      function selectedBounds() {
+        if (!selection) return null;
+        const x = clamp(Math.min(selection.x, selection.x + selection.w), 0, canvas.width - 1);
+        const y = clamp(Math.min(selection.y, selection.y + selection.h), 0, canvas.height - 1);
+        const right = clamp(Math.max(selection.x, selection.x + selection.w), x + 1, canvas.width);
+        const bottom = clamp(Math.max(selection.y, selection.y + selection.h), y + 1, canvas.height);
+        return { x, y, w: right - x, h: bottom - y };
+      }
+
+      function transformFrames(action) {
+        if (!frames.length) return notify("Create or open a canvas first");
+        const bounds = selectedBounds();
+        if (!bounds) return notify("Hold Shift and drag to select an area first");
+        snapshot();
+        const transformed = frames.map(old => {
+          const next = document.createElement("canvas");
+          if (action === "crop") {
+            next.width = bounds.w; next.height = bounds.h;
+            next.getContext("2d").drawImage(old, bounds.x, bounds.y, bounds.w, bounds.h, 0, 0, bounds.w, bounds.h);
+          } else {
+            next.width = old.width; next.height = old.height;
+            next.getContext("2d").drawImage(old, 0, 0);
+            next.getContext("2d").clearRect(bounds.x, bounds.y, bounds.w, bounds.h);
+          }
+          return next;
+        });
+        setFrames(transformed, currentFrame);
+        notify(action === "crop" ? "Cropped all frames" : "Cut selected area");
+      }
+
+      function loadImageFile(file) {
+        if (!file) return;
+        if (file.name.toLowerCase().endsWith(".json")) return loadProjectFile(file);
+        const url = URL.createObjectURL(file);
+        const image = new Image();
+        image.onload = () => {
+          const width = clamp(parseInt($("widthInput").value, 10) || image.naturalWidth, 1, MAX_DIMENSION);
+          const height = clamp(parseInt($("heightInput").value, 10) || image.naturalHeight, 1, MAX_DIMENSION);
+          const frame = document.createElement("canvas");
+          frame.width = width; frame.height = height;
+          const fctx = frame.getContext("2d");
+          fctx.imageSmoothingEnabled = false;
+          fctx.clearRect(0, 0, width, height);
+          fctx.drawImage(image, 0, 0, width, height);
+          setFrames([frame]);
+          URL.revokeObjectURL(url);
+          notify("Image imported and pixelated");
+        };
+        image.onerror = () => { URL.revokeObjectURL(url); notify("Could not open that image"); };
+        image.src = url;
+      }
+
+      function downloadBlob(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url; link.download = filename; link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1200);
+      }
+
+      function exportCurrent() {
+        if (!frames.length) return notify("Create or open a canvas first");
+        saveVisibleToFrame();
+        const mime = $("formatSelect").value;
+        const quality = clamp(Number($("qualityInput").value) || 92, 10, 100) / 100;
+        canvas.toBlob(blob => {
+          if (!blob) return notify("This format could not be exported");
+          const ext = mime.split("/")[1];
+          downloadBlob(blob, `pixel-studio-${canvas.width}x${canvas.height}.${ext}`);
+        }, mime, quality);
+      }
+
+      async function shareImage() {
+        if (!frames.length) return notify("Create or open a canvas first");
+        canvas.toBlob(async blob => {
+          if (!blob) return notify("Could not prepare image");
+          const file = new File([blob], "pixel-art.png", { type: "image/png" });
+          try {
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({ title: "My pixel art", files: [file] });
+            } else if (navigator.clipboard && window.ClipboardItem) {
+              await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+              notify("Image copied to clipboard");
+            } else {
+              downloadBlob(blob, "pixel-art.png");
+              notify("Sharing is unavailable; image downloaded");
+            }
+          } catch (error) {
+            if (error.name !== "AbortError") notify("Share was cancelled or unavailable");
+          }
+        }, "image/png");
+      }
+
+      function projectData() {
+        saveVisibleToFrame();
+        return {
+          app: "Pixel Studio",
+          version: 1,
+          width: canvas.width,
+          height: canvas.height,
+          frames: frames.map(frame => frame.toDataURL("image/png")),
+          fps: clamp(parseInt($("fpsInput").value, 10) || 6, 1, 24)
+        };
+      }
+
+      function saveProjectFile() {
+        if (!frames.length) return notify("Nothing to save");
+        downloadBlob(new Blob([JSON.stringify(projectData())], { type: "application/json" }), "pixel-studio-project.json");
+        notify("Project file downloaded");
+      }
+
+      function loadProjectObject(project) {
+        if (!project || !Array.isArray(project.frames) || !project.frames.length) throw new Error("Invalid project");
+        Promise.all(project.frames.map(src => new Promise((resolve, reject) => {
+          const image = new Image();
+          image.onload = () => {
+            const frame = document.createElement("canvas");
+            frame.width = image.naturalWidth; frame.height = image.naturalHeight;
+            frame.getContext("2d").drawImage(image, 0, 0);
+            resolve(frame);
+          };
+          image.onerror = reject;
+          image.src = src;
+        }))).then(loaded => {
+          $("fpsInput").value = project.fps || 6;
+          setFrames(loaded);
+          notify("Project opened");
+        }).catch(() => notify("Could not read this project file"));
+      }
+
+      function loadProjectFile(file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try { loadProjectObject(JSON.parse(reader.result)); }
+          catch { notify("Invalid project file"); }
+        };
+        reader.readAsText(file);
+      }
+
+      function getGallery() {
+        try { return JSON.parse(localStorage.getItem(STORE_KEY) || "[]"); }
+        catch { return []; }
+      }
+
+      function renderGallery() {
+        const query = $("searchInput").value.trim().toLowerCase();
+        const list = $("galleryList");
+        list.innerHTML = "";
+        getGallery().filter(item => item.name.toLowerCase().includes(query)).forEach(item => {
+          const button = document.createElement("button");
+          button.className = "gallery-item";
+          const image = document.createElement("img");
+          image.src = item.preview; image.alt = "";
+          const title = document.createElement("span");
+          title.textContent = item.name;
+          button.append(image, title);
+          button.addEventListener("click", () => loadProjectObject(item.project));
+          list.appendChild(button);
+        });
+        if (!list.children.length) {
+          const empty = document.createElement("p");
+          empty.className = "hint";
+          empty.textContent = query ? "No matching saved projects." : "No saved projects yet.";
+          list.appendChild(empty);
+        }
+      }
+
+      function saveToGallery() {
+        if (!frames.length) return notify("Nothing to save");
+        const name = prompt("Name this project:", "My pixel art");
+        if (!name) return;
+        try {
+          const gallery = getGallery();
+          gallery.unshift({ name: name.trim(), preview: canvas.toDataURL("image/png"), project: projectData() });
+          localStorage.setItem(STORE_KEY, JSON.stringify(gallery.slice(0, 20)));
+          renderGallery();
+          notify("Saved to this browser");
+        } catch {
+          notify("Browser storage is full; download the project file instead");
+        }
+      }
+
+      function openViewer() {
+        if (!frames.length) return notify("Create or open a canvas first");
+        $("viewerImage").src = canvas.toDataURL("image/png");
+        $("viewerModal").classList.add("open");
+      }
+
+      function playAnimation() {
+        if (!frames.length) return notify("Create or open a canvas first");
+        if (animationTimer) {
+          clearInterval(animationTimer); animationTimer = null;
+          $("playButton").textContent = "▶ Play"; switchFrame(currentFrame); return;
+        }
+        $("playButton").textContent = "■ Stop";
+        animationTimer = setInterval(() => switchFrame((currentFrame + 1) % frames.length),
+          1000 / clamp(parseInt($("fpsInput").value, 10) || 6, 1, 24));
+      }
+
+      async function exportAnimation() {
+        if (frames.length < 2) return notify("Add at least two frames to animate");
+        if (!("MediaRecorder" in window) || !HTMLCanvasElement.prototype.captureStream) {
+          return notify("WebM recording is not supported in this browser");
+        }
+        const fps = clamp(parseInt($("fpsInput").value, 10) || 6, 1, 24);
+        const out = document.createElement("canvas");
+        out.width = canvas.width; out.height = canvas.height;
+        const outCtx = out.getContext("2d");
+        const stream = out.captureStream(fps);
+        const mime = MediaRecorder.isTypeSupported("video/webm;codecs=vp9") ? "video/webm;codecs=vp9" : "video/webm";
+        const recorder = new MediaRecorder(stream, { mimeType: mime });
+        const chunks = [];
+        recorder.ondataavailable = event => { if (event.data.size) chunks.push(event.data); };
+        recorder.onstop = () => {
+          downloadBlob(new Blob(chunks, { type: "video/webm" }), "pixel-studio-animation.webm");
+          stream.getTracks().forEach(track => track.stop());
+          notify("Animation exported");
+        };
+        recorder.start();
+        const frameDuration = 1000 / fps;
+        for (let repeat = 0; repeat < 2; repeat++) {
+          for (const frame of frames) {
+            outCtx.clearRect(0, 0, out.width, out.height);
+            outCtx.drawImage(frame, 0, 0);
+            await new Promise(resolve => setTimeout(resolve, frameDuration));
+          }
+        }
+        recorder.stop();
+      }
+
+      document.querySelectorAll("[data-tool]").forEach(button => button.addEventListener("click", () => {
+        tool = button.dataset.tool;
+        document.querySelectorAll("[data-tool]").forEach(b => b.classList.toggle("active", b === button));
+        $("cursorLabel").textContent = "Tool: " + tool[0].toUpperCase() + tool.slice(1);
+      }));
+
+      $("newButton").addEventListener("click", () => newCanvas($("widthInput").value, $("heightInput").value));
+      $("importButton").addEventListener("click", () => $("fileInput").click());
+      $("openButton").addEventListener("click", () => $("fileInput").click());
+      $("fileInput").addEventListener("change", event => {
+        loadImageFile(event.target.files[0]); event.target.value = "";
+      });
+      $("undoButton").addEventListener("click", () => restoreHistory(undoStack, redoStack));
+      $("redoButton").addEventListener("click", () => restoreHistory(redoStack, undoStack));
+      $("cropButton").addEventListener("click", () => transformFrames("crop"));
+      $("cutButton").addEventListener("click", () => transformFrames("cut"));
+      $("saveButton").addEventListener("click", saveProjectFile);
+      $("downloadProjectButton").addEventListener("click", saveProjectFile);
+      $("openProjectButton").addEventListener("click", () => $("fileInput").click());
+      $("exportButton").addEventListener("click", exportCurrent);
+      $("downloadImageButton").addEventListener("click", exportCurrent);
+      $("shareButton").addEventListener("click", shareImage);
+      $("saveGalleryButton").addEventListener("click", saveToGallery);
+      $("searchInput").addEventListener("input", renderGallery);
+      $("viewButton").addEventListener("click", openViewer);
+      $("closeViewer").addEventListener("click", () => $("viewerModal").classList.remove("open"));
+      $("viewerModal").addEventListener("click", event => {
+        if (event.target === $("viewerModal")) $("viewerModal").classList.remove("open");
+      });
+      $("playButton").addEventListener("click", playAnimation);
+      $("exportAnimationButton").addEventListener("click", exportAnimation);
+      $("zoomInput").addEventListener("input", () => {
+        if (frames.length) setCanvasSize(canvas.width, canvas.height);
+        $("zoomLabel").textContent = `Zoom: ${$("zoomInput").value}×`;
+      });
+      $("eyedropperButton").addEventListener("click", () => {
+        tool = "picker";
+        document.querySelectorAll("[data-tool]").forEach(b => b.classList.toggle("active", b.dataset.tool === "picker"));
+        $("cursorLabel").textContent = "Tool: Picker";
+      });
+
+      $("addFrameButton").addEventListener("click", () => {
+        if (!frames.length) return notify("Create a canvas first");
+        saveVisibleToFrame();
+        const frame = document.createElement("canvas");
+        frame.width = canvas.width; frame.height = canvas.height;
+        frames.push(frame); switchFrame(frames.length - 1); renderFrames();
+      });
+      $("duplicateFrameButton").addEventListener("click", () => {
+        if (!frames.length) return notify("Create a canvas first");
+        saveVisibleToFrame();
+        frames.splice(currentFrame + 1, 0, imageFromCanvas(activeFrame()));
+        switchFrame(currentFrame + 1);
+      });
+      $("deleteFrameButton").addEventListener("click", () => {
+        if (frames.length <= 1) return notify("Keep at least one frame");
+        frames.splice(currentFrame, 1);
+        switchFrame(Math.min(currentFrame, frames.length - 1));
+      });
+
+      document.addEventListener("keydown", event => {
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
+          event.preventDefault(); restoreHistory(event.shiftKey ? redoStack : undoStack, event.shiftKey ? undoStack : redoStack);
+        } else if (event.key === "Escape") $("viewerModal").classList.remove("open");
+        else if (!event.ctrlKey && !event.metaKey && !event.target.matches("input,select,textarea")) {
+          const keys = { b: "pencil", e: "eraser", g: "fill", i: "picker" };
+          if (keys[event.key.toLowerCase()]) {
+            const button = document.querySelector(`[data-tool="${keys[event.key.toLowerCase()]}"]`);
+            button.click();
+          }
+        }
+      });
+
+      renderGallery();
+      newCanvas(32, 32);
+    })();
+  </script>
+</body>
+</html>
