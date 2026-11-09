@@ -1,30 +1,50 @@
-# 🕹️ Crisp Pixel Studio (v1.0 Official)
+# Pixel Studio 🎨
 
-A high-utility, local-first arcade asset viewer and editor built for the **Crisp Suite**. Designed specifically for creators who need direct, zero-compromise control over pixel-art sprites and images without anti-aliasing blur or unwanted data loss.
-
-## ✨ Core Features (v1.0)
-
-* **100% Local-First:** No server-side storage or random API dependency—everything runs securely inside your browser.
-* **Auto Dimension Reader:** Instantly detects and displays the exact original width and height (in pixels) upon file upload.
-* **Precision Resize:** Scale your images to custom pixel dimensions with zero-smoothing rendering (`image-rendering: pixelated`).
-* **Center Crop Utility:** Quickly trim or focus on the center asset area.
-* **Arcade Mono Filter:** Instant grayscale conversion for classic monochrome arcade aesthetics.
-* **Crisp Downloader:** Export your final asset cleanly as a high-fidelity PNG without compression artifacts.
-
-## 🚀 Quick Start
-
-1. Clone or download the repository.
-2. Open `index.html` in any modern web browser.
-3. Upload your sprite or image file and start editing instantly!
+A feature-rich, browser-based pixel art editor and animation tool built as part of the **Crisp Suite**. Designed with a sleek dark theme interface, responsive layout, and robust local project management.
 
 ---
-*HandleVault Digital • Crisp Suite Utility v1.0*
 
-## 🚀 Quick Start
+## ✨ Features
 
-1. Clone or download the repository.
-2. Open `index.html` in any modern web browser.
-3. Upload your sprite or image file and start editing instantly!
+* **New / Custom Canvas:** Create pixel art canvases of any dimension (e.g., standard 32x32px or custom sizes)[span_0](start_span)[span_0](end_span).
+* **Image Import & Resize:** Import existing images directly into the studio, automatically scaled to fit your active canvas dimensions[span_1](start_span)[span_1](end_span).
+* **Brush & Selection Tools:** 
+  * Adjustable brush colors and sizes[span_2](start_span)[span_2](end_span).
+  * Display zoom slider for precision editing[span_3](start_span)[span_3](end_span).
+  * Advanced selection shortcuts (Drag to draw, use Crop or Cut after dragging a rectangular selection with the pencil tool while holding `Shift`)[span_4](start_span)[span_4](end_span).
+* **Frame-by-Frame Animation:** 
+  * Add, duplicate, and delete animation frames[span_5](start_span)[span_5](end_span).
+  * Real-time playback controls with adjustable FPS[span_6](start_span)[span_6](end_span).
+  * Direct **WebM animation export** using browser recording support[span_7](start_span)[span_7](end_span).
+* **Convert & Export Options:** 
+  * Support for multiple image formats (PNG, etc.) with quality adjustment sliders[span_8](start_span)[span_8](end_span).
+  * Download current frames instantly or share/copy images[span_9](start_span)[span_9](end_span).
+* **My Saved Studio (Project Management):** 
+  * Search saved local projects instantly[span_10](start_span)[span_10](end_span).
+  * Save projects directly to the browser gallery or export them as project files (`.json`/`.pixel`) for portable backups[span_11](start_span)[span_11](end_span).
+  * Open previously saved project files anytime[span_12](start_span)[span_12](end_span).
+
+---
+
+## 🚀 Tech Stack
+
+* **HTML5 Canvas & JavaScript (ES6+):** Powers the core drawing engine, pixel manipulation, and frame rendering.
+* **Tailwind CSS:** Used for styling a modern, clean, and responsive user interface.
+* **Web APIs:** Leverages HTML5 Download APIs, local storage, and MediaRecorder API for WebM animation exports.
+
+---
+
+## ☕ Support the Developer
+
+If you find Pixel Studio or the Crisp Suite useful, consider supporting the project:
+
+[![Buy Me a Ko-fi](https://img.shields.io/badge/Buy%20Me%20a%20Ko-fi-ffdd00?style=for-the-badge&logo=ko-fi&logoColor=black)](https://ko-fi.com/Handlevaultofficial)
+
+---
+
+## 📄 License
+
+Open-source project built with passion as part of the Crisp Suite collection.
 
 ---
 *HandleVault Digital • Crisp Suite Utility*
