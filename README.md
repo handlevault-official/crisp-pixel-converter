@@ -1,18 +1,24 @@
-# ⚡ Ultimate Crisp Pixel Converter
+# 🕹️ Crisp Pixel Studio
 
-A lightweight, browser-based web application designed to convert standard images into clean, retro-style pixel art instantly. Built as a fast and privacy-focused MVP using vanilla HTML5, CSS, and JavaScript.
+A high-utility, local-first arcade asset viewer and editor built for the **Crisp Suite**. Designed specifically for creators who need direct control over pixel-art sprites and images without anti-aliasing blur or unwanted data loss.
 
-> **[BETA / EARLY ACCESS TOOL]** — A lightweight, free browser-based utility built for creators, freelancers, and indie makers to convert standard images into retro-style pixel art instantly. Still actively improving. No account required.
+## ✨ Core Features
+
+* **100% Local-First:** No server-side storage or random API dependency—everything runs securely inside your browser.
+* **Auto Dimension Reader:** Instantly detects and displays the exact original width and height (in pixels) upon file upload.
+* **Precision Resize:** Scale your images to custom pixel dimensions with zero-smoothing rendering (`image-rendering: pixelated`).
+* **Center Crop Utility:** Quickly trim or focus on the center asset area.
+* **Arcade Mono Filter:** Instant grayscale conversion for classic monochrome arcade aesthetics.
+* **Crisp Downloader:** Export your final asset cleanly as a high-fidelity PNG without compression artifacts.
+
+## 🚀 Quick Start
+
+1. Clone or download the repository.
+2. Open `index.html` in any modern web browser.
+3. Upload your sprite or image file and start editing instantly!
 
 ---
-
-## 🚀 Key Features
-
-* **Instant Pixelation:** Upload any standard image (`.png`, `.jpg`, `.jpeg`) and downsample it into crisp, clean pixel art.
-* **Adjustable Scale Factors:** Choose between 2x, 4x, and 8x scale options to achieve your desired retro look.
-* **Client-Side Privacy:** Your files, images, and data stay locally on your device. We do not store, upload, or track your personal information on external servers.
-* **One-Click Download:** Export and save your converted pixel art as a high-quality PNG instantly.
-* **Retro Arcade UI:** Designed with a sleek, dark-mode 8-bit aesthetic.
+*HandleVault Digital • Crisp Suite Utility*
 
 ---
 
