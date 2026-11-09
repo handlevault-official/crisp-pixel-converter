@@ -54,12 +54,12 @@
             font-size: 0.85rem;
             text-transform: uppercase;
         }
-        .search-row, .control-row {
+        .control-row {
             display: flex;
             gap: 10px;
             margin-bottom: 10px;
         }
-        input[type="text"], input[type="file"], input[type="number"], select, button {
+        input[type="file"], input[type="number"], button {
             width: 100%;
             padding: 10px;
             background: #000;
@@ -71,7 +71,7 @@
             box-sizing: border-box;
             outline: none;
         }
-        input[type="text"], input[type="number"] {
+        input[type="number"] {
             color: var(--arcade-yellow);
         }
         input[type="file"] {
@@ -94,32 +94,12 @@
             color: #fff;
             box-shadow: 0 0 15px rgba(255, 0, 127, 0.7);
         }
-        .preset-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .preset-thumb {
-            background: #111;
-            border: 1px solid var(--arcade-border);
-            padding: 6px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 0.65rem;
-            color: #fff;
-            transition: 0.2s;
-        }
-        .preset-thumb:hover {
-            background: var(--arcade-border);
-            color: #000;
-        }
         .preview-container {
             margin-top: 20px;
             text-align: center;
             border: 2px dashed var(--arcade-border);
             padding: 15px;
-            min-height: 250px;
+            min-height: 300px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -159,6 +139,9 @@
             color: var(--arcade-yellow);
             text-decoration: none;
         }
+        .footer a:hover {
+            text-decoration: underline;
+        }
         .footer .kofi-link {
             color: var(--arcade-border);
             font-weight: bold;
@@ -170,27 +153,15 @@
     <div class="container">
         <h1>[ CRISP-PIXEL-STUDIO ALL-IN-ONE HUB ]</h1>
         
-        <!-- 1. SEARCH ENGINE & SOURCE -->
+        <!-- 1. UPLOAD SOURCE -->
         <div class="section-box">
-            <label>> 1. Source: Search Asset Engine or Upload</label>
-            <div class="search-row">
-                <input type="text" id="searchQuery" placeholder="Type asset keyword (e.g. cat, star, neon)...">
-                <button onclick="searchAssets()">Search Web</button>
-            </div>
-            <div style="margin-top: 8px;">
-                <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
-            </div>
-            <div class="preset-grid">
-                <div class="preset-thumb" onclick="loadAssetUrl('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300')">Neon Abstract</div>
-                <div class="preset-thumb" onclick="loadAssetUrl('https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300')">Retro Game</div>
-                <div class="preset-thumb" onclick="loadAssetUrl('https://images.unsplash.com/photo-1563089145-599997674d42?w=300')">Cyberpunk</div>
-                <div class="preset-thumb" onclick="loadAssetUrl('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=300')">Glow Gradient</div>
-            </div>
+            <label>> 1. Load Sprite / Image Source</label>
+            <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
         </div>
 
-        <!-- 2. TRANSFORMATION TOOLS (RESIZE & CUT/CROP) -->
+        <!-- 2. STUDIO TOOLS (RESIZE, CUT/CROP, FILTERS) -->
         <div class="section-box">
-            <label>> 2. Studio Tools (Resize & Cut Options)</label>
+            <label>> 2. Studio Controls (Resize & Cut Options)</label>
             <div class="control-row">
                 <div>
                     <label style="font-size: 0.7rem;">Target Width (px):</label>
@@ -213,7 +184,7 @@
 
         <!-- 3. VIEWER & CANVAS RENDERER -->
         <div class="preview-container">
-            <canvas id="previewCanvas">SEARCH OR UPLOAD IMAGE TO ACTIVATE STUDIO...</canvas>
+            <canvas id="previewCanvas">UPLOAD AN IMAGE TO ACTIVATE STUDIO VIEWER...</canvas>
         </div>
 
         <button id="downloadBtn" class="download-btn" style="display:none;" onclick="downloadCrispSheet()">>> Download Final Crisp Sheet <<</button>
@@ -228,31 +199,6 @@
         let currentImg = null;
         let canvas = document.getElementById('previewCanvas');
         let ctx = canvas.getContext('2d');
-
-        function searchAssets() {
-            const query = document.getElementById('searchQuery').value.trim();
-            if (!query) {
-                alert('Please type a search keyword.');
-                return;
-            }
-            const url = `https://picsum.photos/seed/${encodeURIComponent(query)}/500/500`;
-            loadAssetUrl(url);
-        }
-
-        function loadAssetUrl(url) {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.onload = function() {
-                currentImg = img;
-                document.getElementById('resizeWidth').value = img.width;
-                document.getElementById('resizeHeight').value = img.height;
-                renderImage(img);
-            };
-            img.onerror = function() {
-                alert('Failed to fetch image. Please try another keyword or upload manually.');
-            };
-            img.src = url;
-        }
 
         function handleImageUpload(event) {
             const file = event.target.files[0];
@@ -290,7 +236,6 @@
 
         function applyCropCenter() {
             if (!currentImg) return;
-            // I-cut ang gitna (Crop 50% ng original size)
             const sw = Math.floor(currentImg.width * 0.7);
             const sh = Math.floor(currentImg.height * 0.7);
             const sx = Math.floor((currentImg.width - sw) / 2);
@@ -316,9 +261,9 @@
             const data = imgData.data;
             for (let i = 0; i < data.length; i += 4) {
                 let avg = (data[i] + data[i+1] + data[i+2]) / 3;
-                data[i] = avg;     // R
-                data[i+1] = avg; // G
-                data[i+2] = avg; // B
+                data[i] = avg;     
+                data[i+1] = avg; 
+                data[i+2] = avg; 
             }
             ctx.putImageData(imgData, 0, 0);
         }
@@ -330,7 +275,7 @@
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             } catch (err) {
-                alert('Download failed due to browser security or CORS rules.');
+                alert('Download failed due to browser security restrictions.');
             }
         }
     </script>
