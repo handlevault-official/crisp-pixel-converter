@@ -1,20 +1,21 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Crisp Pixel Converter</title>
+    <title>Ultimate Arcade Pixel Converter - Crisp Suite</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --panel-bg: #1e293b;
-            --accent-color: #38bdf8;
-            --text-color: #f8fafc;
-            --border-color: #334155;
+            --arcade-bg: #05050a;
+            --arcade-panel: #0d0f1a;
+            --arcade-border: #00ffcc;
+            --arcade-pink: #ff007f;
+            --arcade-yellow: #ffee00;
+            --text-color: #00ffcc;
         }
         body {
             font-family: 'Courier New', Courier, monospace;
-            background-color: var(--bg-color);
+            background-color: var(--arcade-bg);
             color: var(--text-color);
             margin: 0;
             padding: 20px;
@@ -24,58 +25,87 @@
         }
         .container {
             width: 100%;
-            max-width: 600px;
-            background: var(--panel-bg);
-            border: 2px solid var(--accent-color);
-            padding: 20px;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-            border-radius: 8px;
+            max-width: 700px;
+            background: var(--arcade-panel);
+            border: 3px solid var(--arcade-border);
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4), inset 0 0 15px rgba(0, 255, 204, 0.2);
+            border-radius: 4px;
         }
         h1 {
             text-align: center;
-            color: var(--accent-color);
+            color: var(--arcade-yellow);
             font-size: 1.5rem;
             margin-bottom: 20px;
+            text-shadow: 2px 2px var(--arcade-pink);
+            letter-spacing: 2px;
+        }
+        .grid-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        @media (max-width: 600px) {
+            .grid-controls { grid-template-columns: 1fr; }
         }
         .tool-group {
             margin-bottom: 15px;
         }
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             font-weight: bold;
+            color: var(--arcade-pink);
+            font-size: 0.85rem;
+            text-transform: uppercase;
         }
         input[type="file"], select, button {
             width: 100%;
-            padding: 10px;
-            background: var(--bg-color);
+            padding: 12px;
+            background: #000;
             color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border: 2px solid var(--arcade-border);
+            border-radius: 0px;
             font-family: inherit;
+            font-weight: bold;
             box-sizing: border-box;
+            outline: none;
+        }
+        input[type="file"] {
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        select option {
+            background: #05050a;
+            color: var(--text-color);
         }
         button {
-            background-color: var(--accent-color);
-            color: #0f172a;
-            font-weight: bold;
+            background-color: var(--arcade-yellow);
+            color: #000;
             cursor: pointer;
             margin-top: 10px;
-            transition: opacity 0.2s;
+            border-color: var(--arcade-yellow);
+            box-shadow: 0 0 10px rgba(255, 238, 0, 0.5);
+            transition: all 0.1s;
+            text-transform: uppercase;
         }
         button:hover {
-            opacity: 0.9;
+            background-color: var(--arcade-pink);
+            border-color: var(--arcade-pink);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.7);
         }
         .preview-container {
             margin-top: 20px;
             text-align: center;
-            border: 1px dashed var(--border-color);
+            border: 2px dashed var(--arcade-pink);
             padding: 15px;
-            min-height: 150px;
+            min-height: 220px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #090d16;
+            background: #020205;
         }
         canvas {
             max-width: 100%;
@@ -83,21 +113,155 @@
             image-rendering: pixelated;
         }
         .footer {
-            margin-top: 20px;
+            margin-top: 25px;
             text-align: center;
-            font-size: 0.8rem;
-            color: #94a3b8;
-            line-height: 1.6;
+            font-size: 0.75rem;
+            color: #64748b;
+            line-height: 1.8;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         .footer a {
-            color: var(--accent-color);
+            color: var(--arcade-border);
             text-decoration: none;
         }
+        .footer a:hover {
+            text-decoration: underline;
+        }
         .footer .kofi-link {
-            color: #f472b6;
+            color: var(--arcade-pink);
             font-weight: bold;
         }
     </style>
 </head>
 <body>
-    
+
+    <div class="container">
+        <h1>[ ULTIMATE ARCADE PIXEL STUDIO ]</h1>
+        
+        <div class="tool-group">
+            <label for="imageUpload">> 1. Select Source Image</label>
+            <input type="file" id="imageUpload" accept="image/*" onchange="handleImage(event)">
+        </div>
+
+        <div class="grid-controls">
+            <div class="tool-group">
+                <label for="pixelSizeSelect">> 2. Pixel Resolution Block</label>
+                <select id="pixelSizeSelect" onchange="reprocessImage()">
+                    <option value="8">8px (Coarse Retro)</option>
+                    <option value="16" selected>16px (Standard Arcade)</option>
+                    <option value="32">32px (Detailed Sprite)</option>
+                    <option value="64">64px (High-Res 8-Bit)</option>
+                </select>
+            </div>
+            <div class="tool-group">
+                <label for="colorModeSelect">> 3. Color Palette Mode</label>
+                <select id="colorModeSelect" onchange="reprocessImage()">
+                    <option value="full" selected>Full True Color</option>
+                    <option value="gameboy">Classic GameBoy (4-Shade)</option>
+                    <option value="monochrome">High Contrast Mono</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="preview-container">
+            <canvas id="pixelCanvas">WAITING FOR PLAYER INPUT...</canvas>
+        </div>
+
+        <button id="downloadBtn" style="display:none;" onclick="downloadImage()">>> Download Pixel Art Sheet <<</button>
+        
+        <div class="footer">
+            HandleVault Digital • Crisp Suite Utility<br>
+            <a href="https://ko-fi.com" target="_blank" class="kofi-link">☕ Support on Ko-fi</a>
+        </div>
+    </div>
+
+    <script>
+        let uploadedImage = null;
+
+        function handleImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    uploadedImage = img;
+                    processPixelArt();
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function reprocessImage() {
+            if (uploadedImage) {
+                processPixelArt();
+            }
+        }
+
+        function processPixelArt() {
+            const canvas = document.getElementById('pixelCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            const blockSize = parseInt(document.getElementById('pixelSizeSelect').value);
+            const colorMode = document.getElementById('colorModeSelect').value;
+
+            const w = uploadedImage.width;
+            const h = uploadedImage.height;
+            
+            const scaledWidth = Math.max(1, Math.floor(w / blockSize));
+            const scaledHeight = Math.max(1, Math.floor(h / blockSize));
+
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = scaledWidth;
+            tempCanvas.height = scaledHeight;
+
+            tempCtx.imageSmoothingEnabled = false;
+            tempCtx.drawImage(uploadedImage, 0, 0, scaledWidth, scaledHeight);
+
+            if (colorMode !== 'full') {
+                const imgData = tempCtx.getImageData(0, 0, scaledWidth, scaledHeight);
+                const data = imgData.data;
+                for (let i = 0; i < data.length; i += 4) {
+                    const avg = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
+                    if (colorMode === 'monochrome') {
+                        const val = avg > 128 ? 255 : 0;
+                        data[i] = val; data[i+1] = val; data[i+2] = val;
+                    } else if (colorMode === 'gameboy') {
+                        let shade = Math.floor(avg / 64);
+                        const gbColors = [
+                            [15, 56, 15],     
+                            [48, 98, 48],     
+                            [139, 172, 15],   
+                            [155, 188, 15]    
+                        ];
+                        const c = gbColors[Math.min(shade, 3)];
+                        data[i] = c[0]; data[i+1] = c[1]; data[i+2] = c[2];
+                    }
+                }
+                tempCtx.putImageData(imgData, 0, 0);
+            }
+
+            canvas.width = w;
+            canvas.height = h;
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(tempCanvas, 0, 0, scaledWidth, scaledHeight, 0, 0, w, h);
+
+            document.getElementById('downloadBtn').style.display = 'block';
+        }
+
+        function downloadImage() {
+            const canvas = document.getElementById('pixelCanvas');
+            const link = document.createElement('a');
+            link.download = 'arcade-pixel-masterpiece.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+
+</body>
+        </html>
+            
