@@ -17,6 +17,23 @@ If you want to run or test this project locally on your machine, follow these si
 1. Clone the repository:
    ```bash
    git clone [https://github.com/handlevault-official/crisp-pixel-converter.git](https://github.com/handlevault-official/crisp-pixel-converter.git)
+
+ 2.  Navigate to the project directory:
+   cd crisp-pixel-converter
+
+ 3.  Run a local HTTP server (using Python):
+     python3 -m http.server 8000
+     
+ 5. Open your browser and go to:
+    http://localhost:8000
+    
+## 📦 Deployment
+This project is deployed and hosted live using GitHub Pages.
+☕ Support & Feedback
+Created by HandleVault Official. If you find this tool helpful, feel free to star the repository or share feedback!
+📜 License
+Distributed under the MIT License. See LICENSE for more information.
+
 ## 📬 Support & Contact
 
 Created by [HandleVault Official](https://github.com/handlevault-official). If you have questions, feedback, or suggestions, feel free to reach out via email at **handlevault.digital@proton.me**.
