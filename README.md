@@ -10,6 +10,8 @@ A lightweight, browser-based web application designed to convert standard images
 * **One-Click Download:** Export and save your converted pixel art as a high-quality PNG instantly.
 * **Retro Arcade UI:** Designed with a sleek, dark-mode 8-bit aesthetic.
 
+> **[BETA / EARLY ACCESS TOOL]** — A lightweight, free browser-based utility built for creators, freelancers, and indie makers. Still actively improving.
+
 ## 🛠️ Local Development & Preview
 
 If you want to run or test this project locally on your machine, follow these simple steps:
