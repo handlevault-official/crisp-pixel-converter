@@ -1,8 +1,8 @@
-# 🕹️ Crisp Pixel Studio
+# 🕹️ Crisp Pixel Studio (v1.0 Official)
 
-A high-utility, local-first arcade asset viewer and editor built for the **Crisp Suite**. Designed specifically for creators who need direct control over pixel-art sprites and images without anti-aliasing blur or unwanted data loss.
+A high-utility, local-first arcade asset viewer and editor built for the **Crisp Suite**. Designed specifically for creators who need direct, zero-compromise control over pixel-art sprites and images without anti-aliasing blur or unwanted data loss.
 
-## ✨ Core Features
+## ✨ Core Features (v1.0)
 
 * **100% Local-First:** No server-side storage or random API dependency—everything runs securely inside your browser.
 * **Auto Dimension Reader:** Instantly detects and displays the exact original width and height (in pixels) upon file upload.
@@ -10,6 +10,15 @@ A high-utility, local-first arcade asset viewer and editor built for the **Crisp
 * **Center Crop Utility:** Quickly trim or focus on the center asset area.
 * **Arcade Mono Filter:** Instant grayscale conversion for classic monochrome arcade aesthetics.
 * **Crisp Downloader:** Export your final asset cleanly as a high-fidelity PNG without compression artifacts.
+
+## 🚀 Quick Start
+
+1. Clone or download the repository.
+2. Open `index.html` in any modern web browser.
+3. Upload your sprite or image file and start editing instantly!
+
+---
+*HandleVault Digital • Crisp Suite Utility v1.0*
 
 ## 🚀 Quick Start
 
