@@ -1,0 +1,77 @@
+:root {
+  --arcade-pink: #ff71ce;
+  --arcade-gold: #ffd166;
+  --arcade-cyan: #00f0ff;
+  --arcade-bg: #10101a;
+  --arcade-panel: #151522;
+  --arcade-line: #343449;
+  font-family: "Courier New", Courier, monospace;
+}
+
+/* Thin borders stay on the structural containers; attention is carried by text color. */
+body {
+  background: var(--arcade-bg) !important;
+  color: #e8e7f2 !important;
+  font-family: "Courier New", Courier, monospace !important;
+}
+:where(main, header, section, article, aside, .panel, .card, .editor, .sidebar, .preview-shell, .preview-wrap, .paper, .stage, .frame-wrap) {
+  border-width: 1px !important;
+}
+:where(.panel, .card, .editor, .sidebar, .preview-shell, .preview-wrap, .paper, .frame-wrap) {
+  border-color: var(--arcade-line) !important;
+}
+:where(button, input, select, textarea) {
+  font-family: "Courier New", Courier, monospace !important;
+}
+
+/* Primary product headers and actions: pink text, never a colored fill box. */
+.attention-primary,
+.attention-button,
+.active-count {
+  color: var(--arcade-pink) !important;
+  text-shadow: 0 0 6px rgb(255 113 206 / 55%);
+  font-weight: 700;
+}
+.attention-button {
+  appearance: none;
+  border: 0 !important;
+  background: transparent !important;
+  font: inherit;
+  cursor: pointer;
+}
+.attention-button:hover,
+.attention-button:focus-visible {
+  color: #fff !important;
+  outline: 1px solid var(--arcade-pink);
+  outline-offset: 3px;
+}
+
+/* Warnings, errors, totals and urgent values: gold text. */
+.attention-warning {
+  color: var(--arcade-gold) !important;
+  text-shadow: 0 0 6px rgb(255 209 102 / 45%);
+  font-weight: 700;
+}
+
+/* Status, privacy notes and helpful tips: cyan text. */
+.attention-info {
+  color: var(--arcade-cyan) !important;
+  text-shadow: 0 0 6px rgb(0 240 255 / 40%);
+}
+
+:where(h1, h2, h3, .brand h1, .brand h2) {
+  font-family: "Courier New", Courier, monospace !important;
+}
+:where(button.primary, .btn.primary, [type="submit"], .add-item) {
+  color: var(--arcade-pink) !important;
+  background: transparent !important;
+  border-color: var(--arcade-line) !important;
+  text-shadow: 0 0 6px rgb(255 113 206 / 45%);
+}
+:where(.statusbar, .status, .hint, .privacy, .tagline, .toast) {
+  color: var(--arcade-cyan) !important;
+}
+:where(.total, .totals, .grand, .error, .warning, [role="alert"]) {
+  color: var(--arcade-gold) !important;
+}
+:focus-visible { outline: 1px solid var(--arcade-cyan) !important; outline-offset: 2px; }
