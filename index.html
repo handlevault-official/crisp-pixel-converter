@@ -815,12 +815,18 @@
   text-decoration: underline;
 }
 
-@media (max-width: 480px) {
-  .site-footer {
-    align-items: flex-start;
-    flex-direction: column;
-}
-  <footer class="site-footer">
+<!-- 1. Ilagay ang CSS styles sa loob ng <style> tag -->
+<style>
+  @media (max-width: 480px) {
+    .site-footer {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>
+
+<!-- 2. Ang HTML footer ay dapat nasa labas ng CSS/Style tags -->
+<footer class="site-footer">
   <span>© <span id="year"></span> Pixel Studio</span>
   <a
     href="https://ko-fi.com/Handlevaultofficial"
@@ -828,14 +834,15 @@
     rel="noopener noreferrer"
   >☕ Buy me a Ko-fi</a>
 </footer>
-
+      
+<!-- 3. Malinis na script para sa taon at iba pa (Wala nang stray parentheses kung walang IIFE) -->
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // Dito nagtatapos ang iyong IIFE script block kung meron man sa taas
-  renderGallery();
-  newCanvas(32, 32);
-})();
+  // Siguraduhing kung may renderGallery() at newCanvas() ka, 
+  // tawagin mo lang sila nang direkta o sa loob ng tamang function.
+  if (typeof renderGallery === 'function') renderGallery();
+  if (typeof newCanvas === 'function') newCanvas(32, 32);
 </script>
 
 </body>
