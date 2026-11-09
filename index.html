@@ -791,7 +791,7 @@
           const keys = { b: "pencil", e: "eraser", g: "fill", i: "picker" };
           if (keys[event.key.toLowerCase()]) {
             const button = document.querySelector(`[data-tool="${keys[event.key.toLowerCase()]}"]`);
-            tton.click();
+            button.click();
           }
         }
       });
