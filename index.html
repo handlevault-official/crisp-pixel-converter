@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Arcade Pixel Studio - Crisp Suite</title>
+    <title>Ultimate Arcade Crisp Studio - Direct Render & Download</title>
     <style>
         :root {
             --arcade-bg: #0d050a;
@@ -51,7 +51,7 @@
             font-size: 0.85rem;
             text-transform: uppercase;
         }
-        input[type="file"], select, button {
+        input[type="file"], button {
             width: 100%;
             padding: 12px;
             background: #000;
@@ -66,10 +66,6 @@
         input[type="file"] {
             cursor: pointer;
             font-size: 0.75rem;
-        }
-        select option {
-            background: #0d050a;
-            color: var(--text-color);
         }
         button {
             background-color: var(--arcade-yellow);
@@ -130,27 +126,18 @@
 <body>
 
     <div class="container">
-        <h1>[ ULTIMATE ARCADE PIXEL STUDIO ]</h1>
+        <h1>[ ULTIMATE ARCADE CRISP STUDIO ]</h1>
         
         <div class="tool-group">
             <label for="imageUpload">> 1. Select Source Image</label>
             <input type="file" id="imageUpload" accept="image/*" onchange="handleImage(event)">
         </div>
 
-        <div class="tool-group">
-            <label for="paletteSelect">> 2. Color Palette Mode</label>
-            <select id="paletteSelect" onchange="reprocessImage()">
-                <option value="full" selected>Full True Color (Auto-Clarity)</option>
-                <option value="neon">Cyber Arcade Neon</option>
-                <option value="pastel">Soft Retro Pastel</option>
-            </select>
-        </div>
-
         <div class="preview-container">
-            <canvas id="pixelCanvas">UPLOAD IMAGE TO AUTO-READ & RENDER CRISP PIXEL GRID...</canvas>
+            <canvas id="previewCanvas">UPLOAD IMAGE TO RENDER CRISP VIEW...</canvas>
         </div>
 
-        <button id="downloadBtn" style="display:none;" onclick="downloadImage()">>> Download Crisp Pixel Sheet <<</button>
+        <button id="downloadBtn" style="display:none;" onclick="downloadOriginalSheet()">>> Download Original Crisp Sheet <<</button>
         
         <div class="footer">
             HandleVault Digital • Crisp Suite Utility<br>
@@ -159,7 +146,9 @@
     </div>
 
     <script>
-        let uploadedImage = null;
+        let uploadedImageSrc = null;
+        let originalWidth = 0;
+        let originalHeight = 0;
 
         function handleImage(event) {
             const file = event.target.files[0];
@@ -167,103 +156,34 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
+                uploadedImageSrc = e.target.result;
                 const img = new Image();
                 img.onload = function() {
-                    uploadedImage = img;
-                    processPixelArt();
+                    originalWidth = img.width;
+                    originalHeight = img.height;
+
+                    const canvas = document.getElementById('previewCanvas');
+                    const ctx = canvas.getContext('2d');
+
+                    canvas.width = originalWidth;
+                    canvas.height = originalHeight;
+
+                    ctx.imageSmoothingEnabled = false;
+                    ctx.drawImage(img, 0, 0);
+
+                    document.getElementById('downloadBtn').style.display = 'block';
                 }
-                img.onerror = function() {
-                    alert('Error loading image file.');
-                }
-                img.src = e.target.result;
+                img.src = uploadedImageSrc;
             }
             reader.readAsDataURL(file);
         }
 
-        function reprocessImage() {
-            if (uploadedImage) {
-                processPixelArt();
-            }
-        }
-
-        function processPixelArt() {
-            if (!uploadedImage) return;
-
-            const canvas = document.getElementById('pixelCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            const paletteMode = document.getElementById('paletteSelect').value;
-
-            // 1. Basahin ang eksaktong sukat ng pumasok na image file (Code-based reading)
-            let srcWidth = uploadedImage.width;
-            let srcHeight = uploadedImage.height;
-
-            // 2. Awtomatikong mag-set ng magandang resolution limit para hindi madurog habang pinapanatili ang aspect ratio
-            const MAX_RES = 96; 
-            let targetWidth = srcWidth;
-            let targetHeight = srcHeight;
-
-            if (srcWidth > MAX_RES || srcHeight > MAX_RES) {
-                if (srcWidth > srcHeight) {
-                    targetWidth = MAX_RES;
-                    targetHeight = Math.round((srcHeight * MAX_RES) / srcWidth);
-                } else {
-                    targetHeight = MAX_RES;
-                    targetWidth = Math.round((srcWidth * MAX_RES) / srcHeight);
-                }
-            }
-
-            // Gamitin ang temp canvas para sa malinis na pagkuha ng pixel data nang walang blur
-            const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = targetWidth;
-            tempCanvas.height = targetHeight;
-
-            tempCtx.imageSmoothingEnabled = false;
-            tempCtx.drawImage(uploadedImage, 0, 0, targetWidth, targetHeight);
-
-            const imgData = tempCtx.getImageData(0, 0, targetWidth, targetHeight);
-            const data = imgData.data;
-
-            // 3. I-render sa final display canvas gamit ang tamang scale factor para laging sharp at solid
-            const scaleFactor = 8;
-            canvas.width = targetWidth * scaleFactor;
-            canvas.height = targetHeight * scaleFactor;
-
-            ctx.imageSmoothingEnabled = false;
-
-            for (let y = 0; y < targetHeight; y++) {
-                for (let x = 0; x < targetWidth; x++) {
-                    const i = (y * targetWidth + x) * 4;
-                    let r = data[i];
-                    let g = data[i+1];
-                    let b = data[i+2];
-                    let a = data[i+3];
-
-                    if (paletteMode === 'neon') {
-                        r = r > 120 ? 255 : 0;
-                        g = g > 120 ? 255 : 0;
-                        b = b > 120 ? 255 : 0;
-                    } else if (paletteMode === 'pastel') {
-                        r = Math.min(255, r + 40);
-                        g = Math.max(0, g - 15);
-                        b = Math.min(255, b + 50);
-                    }
-
-                    ctx.fillStyle = `rgba(${r},${g},${b},${a/255})`;
-                    ctx.fillRect(x * scaleFactor, y * scaleFactor, scaleFactor, scaleFactor);
-                }
-            }
-
-            document.getElementById('downloadBtn').style.display = 'block';
-        }
-
-        function downloadImage() {
-            const canvas = document.getElementById('pixelCanvas');
+        function downloadOriginalSheet() {
+            if (!uploadedImageSrc) return;
             try {
                 const link = document.createElement('a');
-                link.download = 'arcade-clean-pixel-sheet.png';
-                link.href = canvas.toDataURL('image/png');
+                link.download = 'crisp-original-sheet.png';
+                link.href = uploadedImageSrc;
                 link.click();
             } catch (err) {
                 alert('Download failed due to browser security restrictions.');
@@ -273,4 +193,4 @@
 
 </body>
         </html>
-         
+            
