@@ -114,10 +114,18 @@
             border: 1px solid #333;
         }
         .toolbar-group {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
             margin-top: 15px;
+        }
+        .toolbar-group button {
+            flex: 1 1 auto;
+            min-width: 110px;
         }
         .download-btn {
             background-color: var(--arcade-yellow);
@@ -181,24 +189,6 @@
                 <button onclick="applyGrayscale()">Arcade Mono</button>
             </div>
         </div>
- </style>
-    </head>       
-.toolbar-group {
-    display: flex;
-    flex-wrap: wrap; /* Allows buttons to wrap to the next line on mobile */
-    gap: 8px;        /* Adds clean spacing between buttons */
-    justify-content: center;
-    align-items: center;
-    width: 100%;     /* Ensures it respects the parent container width */
-    box-sizing: border-box;
-}
- </style>
-    </head>     
-        
-.toolbar-group button {
-    flex: 1 1 auto;  /* Allows buttons to scale flexibly */
-    min-width: 110px; /* Prevents buttons from shrinking too much */
-}
         
         <!-- 3. VIEWER & CANVAS RENDERER -->
         <div class="preview-container">
@@ -297,7 +287,6 @@
             }
         }
     </script>
-
 </body>
         </html>
             
