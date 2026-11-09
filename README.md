@@ -1,14 +1,17 @@
 # Pixel Studio
 
-**Pixel Studio** is a collection of small, browser-based creative tools for indie creators. The project is in public beta. Apps run client-side; drafts are stored in the browser you use, and uploaded images are processed locally.
+**Pixel Studio** is a collection of four small, browser-based creative tools for indie creators. The project is in public beta. Apps run client-side; drafts are stored in the browser you use, and uploaded images are processed locally.
 
-## Try the apps
+## Try the four apps
 
 - **[Pixel Art Crisp Scaler](https://handlevault-official.github.io/crisp-pixel-studio/)** — upscale pixel art with nearest-neighbor rendering and download a PNG. The current scaler uses a fixed 4× scale.
 - **[Invoice Studio](https://handlevault-official.github.io/crisp-pixel-studio/invoice.html)** — create an invoice with editable business and client details, line items, currency, tax and discount calculations; print or save as PDF.
 - **[Resume & CV Studio](https://handlevault-official.github.io/crisp-pixel-studio/resume.html)** — build a resume or CV with editable sections, design themes, a live preview, local draft controls, and print/PDF output.
 - **[Moonlit Beads](https://handlevault-official.github.io/crisp-pixel-studio/moonlit-beads.html)** — turn an image into a bead-pattern chart with palette and grid settings, color quantities, and export/print options.
-- **[Seasonal Studio](https://handlevault-official.github.io/crisp-pixel-studio/seasonal-studio.html)** — browse the apps with seasonal visual themes.
+
+## Seasonal browsing
+
+[Seasonal Studio](https://handlevault-official.github.io/crisp-pixel-studio/seasonal-studio.html) is a seasonal-themed way to browse the apps; it is separate from the four tools listed above.
 
 ## Notes
 
