@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Arcade Crisp Studio - Direct Render & Download</title>
+    <title>crisp-pixel-studio - All-in-One Arcade Studio</title>
     <style>
         :root {
             --arcade-bg: #0d050a;
@@ -25,7 +25,7 @@
         }
         .container {
             width: 100%;
-            max-width: 750px;
+            max-width: 850px;
             background: var(--arcade-panel);
             border: 3px solid var(--arcade-border);
             padding: 25px;
@@ -40,7 +40,10 @@
             text-shadow: 2px 2px var(--arcade-border);
             letter-spacing: 2px;
         }
-        .tool-group {
+        .section-box {
+            background: #050204;
+            border: 2px solid var(--arcade-border);
+            padding: 15px;
             margin-bottom: 15px;
         }
         label {
@@ -51,9 +54,14 @@
             font-size: 0.85rem;
             text-transform: uppercase;
         }
-        input[type="file"], button {
+        .search-row, .control-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        input[type="text"], input[type="file"], input[type="number"], select, button {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background: #000;
             color: var(--text-color);
             border: 2px solid var(--arcade-border);
@@ -63,6 +71,9 @@
             box-sizing: border-box;
             outline: none;
         }
+        input[type="text"], input[type="number"] {
+            color: var(--arcade-yellow);
+        }
         input[type="file"] {
             cursor: pointer;
             font-size: 0.75rem;
@@ -71,17 +82,37 @@
             background-color: var(--arcade-yellow);
             color: #000;
             cursor: pointer;
-            margin-top: 10px;
             border-color: var(--arcade-yellow);
             box-shadow: 0 0 10px rgba(255, 238, 0, 0.5);
             transition: all 0.1s;
             text-transform: uppercase;
+            white-space: nowrap;
         }
         button:hover {
             background-color: var(--arcade-border);
             border-color: var(--arcade-border);
             color: #fff;
             box-shadow: 0 0 15px rgba(255, 0, 127, 0.7);
+        }
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .preset-thumb {
+            background: #111;
+            border: 1px solid var(--arcade-border);
+            padding: 6px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.65rem;
+            color: #fff;
+            transition: 0.2s;
+        }
+        .preset-thumb:hover {
+            background: var(--arcade-border);
+            color: #000;
         }
         .preview-container {
             margin-top: 20px;
@@ -100,6 +131,20 @@
             height: auto;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
+            border: 1px solid #333;
+        }
+        .toolbar-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .download-btn {
+            background-color: var(--arcade-yellow);
+            color: #000;
+            margin-top: 15px;
+            padding: 12px;
+            font-size: 1rem;
         }
         .footer {
             margin-top: 25px;
@@ -114,9 +159,6 @@
             color: var(--arcade-yellow);
             text-decoration: none;
         }
-        .footer a:hover {
-            text-decoration: underline;
-        }
         .footer .kofi-link {
             color: var(--arcade-border);
             font-weight: bold;
@@ -126,18 +168,55 @@
 <body>
 
     <div class="container">
-        <h1>[ ULTIMATE ARCADE CRISP STUDIO ]</h1>
+        <h1>[ CRISP-PIXEL-STUDIO ALL-IN-ONE HUB ]</h1>
         
-        <div class="tool-group">
-            <label for="imageUpload">> 1. Select Source Image</label>
-            <input type="file" id="imageUpload" accept="image/*" onchange="handleImage(event)">
+        <!-- 1. SEARCH ENGINE & SOURCE -->
+        <div class="section-box">
+            <label>> 1. Source: Search Asset Engine or Upload</label>
+            <div class="search-row">
+                <input type="text" id="searchQuery" placeholder="Type asset keyword (e.g. cat, star, neon)...">
+                <button onclick="searchAssets()">Search Web</button>
+            </div>
+            <div style="margin-top: 8px;">
+                <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
+            </div>
+            <div class="preset-grid">
+                <div class="preset-thumb" onclick="loadAssetUrl('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300')">Neon Abstract</div>
+                <div class="preset-thumb" onclick="loadAssetUrl('https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300')">Retro Game</div>
+                <div class="preset-thumb" onclick="loadAssetUrl('https://images.unsplash.com/photo-1563089145-599997674d42?w=300')">Cyberpunk</div>
+                <div class="preset-thumb" onclick="loadAssetUrl('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=300')">Glow Gradient</div>
+            </div>
         </div>
 
+        <!-- 2. TRANSFORMATION TOOLS (RESIZE & CUT/CROP) -->
+        <div class="section-box">
+            <label>> 2. Studio Tools (Resize & Cut Options)</label>
+            <div class="control-row">
+                <div>
+                    <label style="font-size: 0.7rem;">Target Width (px):</label>
+                    <input type="number" id="resizeWidth" placeholder="Width">
+                </div>
+                <div>
+                    <label style="font-size: 0.7rem;">Target Height (px):</label>
+                    <input type="number" id="resizeHeight" placeholder="Height">
+                </div>
+                <div style="display: flex; align-items: flex-end;">
+                    <button onclick="applyResize()" style="height: 41px;">Apply Resize</button>
+                </div>
+            </div>
+            <div class="toolbar-group">
+                <button onclick="applyCropCenter()">Cut / Crop Center</button>
+                <button onclick="resetImageState()">Reset Original</button>
+                <button onclick="applyGrayscale()">Arcade Mono</button>
+            </div>
+        </div>
+
+        <!-- 3. VIEWER & CANVAS RENDERER -->
         <div class="preview-container">
-            <canvas id="previewCanvas">UPLOAD IMAGE TO RENDER CRISP VIEW...</canvas>
+            <canvas id="previewCanvas">SEARCH OR UPLOAD IMAGE TO ACTIVATE STUDIO...</canvas>
         </div>
 
-        <button id="downloadBtn" style="display:none;" onclick="downloadOriginalSheet()">>> Download Original Crisp Sheet <<</button>
+        <button id="downloadBtn" class="download-btn" style="display:none;" onclick="downloadCrispSheet()">>> Download Final Crisp Sheet <<</button>
         
         <div class="footer">
             HandleVault Digital • Crisp Suite Utility<br>
@@ -146,47 +225,112 @@
     </div>
 
     <script>
-        let uploadedImageSrc = null;
-        let originalWidth = 0;
-        let originalHeight = 0;
+        let currentImg = null;
+        let canvas = document.getElementById('previewCanvas');
+        let ctx = canvas.getContext('2d');
 
-        function handleImage(event) {
+        function searchAssets() {
+            const query = document.getElementById('searchQuery').value.trim();
+            if (!query) {
+                alert('Please type a search keyword.');
+                return;
+            }
+            const url = `https://picsum.photos/seed/${encodeURIComponent(query)}/500/500`;
+            loadAssetUrl(url);
+        }
+
+        function loadAssetUrl(url) {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function() {
+                currentImg = img;
+                document.getElementById('resizeWidth').value = img.width;
+                document.getElementById('resizeHeight').value = img.height;
+                renderImage(img);
+            };
+            img.onerror = function() {
+                alert('Failed to fetch image. Please try another keyword or upload manually.');
+            };
+            img.src = url;
+        }
+
+        function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                uploadedImageSrc = e.target.result;
                 const img = new Image();
                 img.onload = function() {
-                    originalWidth = img.width;
-                    originalHeight = img.height;
-
-                    const canvas = document.getElementById('previewCanvas');
-                    const ctx = canvas.getContext('2d');
-
-                    canvas.width = originalWidth;
-                    canvas.height = originalHeight;
-
-                    ctx.imageSmoothingEnabled = false;
-                    ctx.drawImage(img, 0, 0);
-
-                    document.getElementById('downloadBtn').style.display = 'block';
-                }
-                img.src = uploadedImageSrc;
-            }
+                    currentImg = img;
+                    document.getElementById('resizeWidth').value = img.width;
+                    document.getElementById('resizeHeight').value = img.height;
+                    renderImage(img);
+                };
+                img.src = e.target.result;
+            };
             reader.readAsDataURL(file);
         }
 
-        function downloadOriginalSheet() {
-            if (!uploadedImageSrc) return;
+        function renderImage(img, w = img.width, h = img.height, sx = 0, sy = 0, sw = img.width, sh = img.height) {
+            canvas.width = w;
+            canvas.height = h;
+            ctx.imageSmoothingEnabled = false;
+            ctx.clearRect(0, 0, w, h);
+            ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+            document.getElementById('downloadBtn').style.display = 'block';
+        }
+
+        function applyResize() {
+            if (!currentImg) return;
+            const w = parseInt(document.getElementById('resizeWidth').value) || currentImg.width;
+            const h = parseInt(document.getElementById('resizeHeight').value) || currentImg.height;
+            renderImage(currentImg, w, h);
+        }
+
+        function applyCropCenter() {
+            if (!currentImg) return;
+            // I-cut ang gitna (Crop 50% ng original size)
+            const sw = Math.floor(currentImg.width * 0.7);
+            const sh = Math.floor(currentImg.height * 0.7);
+            const sx = Math.floor((currentImg.width - sw) / 2);
+            const sy = Math.floor((currentImg.height - sh) / 2);
+
+            document.getElementById('resizeWidth').value = sw;
+            document.getElementById('resizeHeight').value = sh;
+            renderImage(currentImg, sw, sh, sx, sy, sw, sh);
+        }
+
+        function resetImageState() {
+            if (!currentImg) return;
+            document.getElementById('resizeWidth').value = currentImg.width;
+            document.getElementById('resizeHeight').value = currentImg.height;
+            renderImage(currentImg, currentImg.width, currentImg.height);
+        }
+
+        function applyGrayscale() {
+            if (!currentImg) return;
+            const w = canvas.width;
+            const h = canvas.height;
+            const imgData = ctx.getImageData(0, 0, w, h);
+            const data = imgData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                let avg = (data[i] + data[i+1] + data[i+2]) / 3;
+                data[i] = avg;     // R
+                data[i+1] = avg; // G
+                data[i+2] = avg; // B
+            }
+            ctx.putImageData(imgData, 0, 0);
+        }
+
+        function downloadCrispSheet() {
             try {
                 const link = document.createElement('a');
-                link.download = 'crisp-original-sheet.png';
-                link.href = uploadedImageSrc;
+                link.download = 'crisp-pixel-studio-export.png';
+                link.href = canvas.toDataURL('image/png');
                 link.click();
             } catch (err) {
-                alert('Download failed due to browser security restrictions.');
+                alert('Download failed due to browser security or CORS rules.');
             }
         }
     </script>
