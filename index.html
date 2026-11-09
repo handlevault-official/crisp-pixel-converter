@@ -172,7 +172,7 @@
         
         <div class="footer">
             HandleVault Digital • Crisp Suite Utility<br>
-            <a href="https://ko-fi.com" target="_blank" class="kofi-link">☕ Support on Ko-fi</a>
+            <a href="https://ko-fi.com//Handlevaultofficial" target="_blank" class="kofi-link">☕ Support on Ko-fi</a>
         </div>
     </div>
 
@@ -190,6 +190,9 @@
                     uploadedImage = img;
                     processPixelArt();
                 }
+                img.onerror = function() {
+                    alert('Error loading image file. Please try another image.');
+                }
                 img.src = e.target.result;
             }
             reader.readAsDataURL(file);
@@ -202,6 +205,8 @@
         }
 
         function processPixelArt() {
+            if (!uploadedImage) return;
+
             const canvas = document.getElementById('pixelCanvas');
             const ctx = canvas.getContext('2d');
             
@@ -214,6 +219,7 @@
             const scaledWidth = Math.max(1, Math.floor(w / blockSize));
             const scaledHeight = Math.max(1, Math.floor(h / blockSize));
 
+            // Temporary small canvas for downsampling
             const tempCanvas = document.createElement('canvas');
             const tempCtx = tempCanvas.getContext('2d');
             tempCanvas.width = scaledWidth;
@@ -222,29 +228,35 @@
             tempCtx.imageSmoothingEnabled = false;
             tempCtx.drawImage(uploadedImage, 0, 0, scaledWidth, scaledHeight);
 
+            // Apply optional palette filters safely
             if (colorMode !== 'full') {
-                const imgData = tempCtx.getImageData(0, 0, scaledWidth, scaledHeight);
-                const data = imgData.data;
-                for (let i = 0; i < data.length; i += 4) {
-                    const avg = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
-                    if (colorMode === 'monochrome') {
-                        const val = avg > 128 ? 255 : 0;
-                        data[i] = val; data[i+1] = val; data[i+2] = val;
-                    } else if (colorMode === 'gameboy') {
-                        let shade = Math.floor(avg / 64);
-                        const gbColors = [
-                            [15, 56, 15],     
-                            [48, 98, 48],     
-                            [139, 172, 15],   
-                            [155, 188, 15]    
-                        ];
-                        const c = gbColors[Math.min(shade, 3)];
-                        data[i] = c[0]; data[i+1] = c[1]; data[i+2] = c[2];
+                try {
+                    const imgData = tempCtx.getImageData(0, 0, scaledWidth, scaledHeight);
+                    const data = imgData.data;
+                    for (let i = 0; i < data.length; i += 4) {
+                        const avg = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
+                        if (colorMode === 'monochrome') {
+                            const val = avg > 128 ? 255 : 0;
+                            data[i] = val; data[i+1] = val; data[i+2] = val;
+                        } else if (colorMode === 'gameboy') {
+                            let shade = Math.floor(avg / 64);
+                            const gbColors = [
+                                [15, 56, 15],     
+                                [48, 98, 48],     
+                                [139, 172, 15],   
+                                [155, 188, 15]    
+                            ];
+                            const c = gbColors[Math.min(shade, 3)];
+                            data[i] = c[0]; data[i+1] = c[1]; data[i+2] = c[2];
+                        }
                     }
+                    tempCtx.putImageData(imgData, 0, 0);
+                } catch (err) {
+                    console.warn("Palette filter skipped due to security restriction.", err);
                 }
-                tempCtx.putImageData(imgData, 0, 0);
             }
 
+            // Output upscaled pixelated canvas
             canvas.width = w;
             canvas.height = h;
             ctx.imageSmoothingEnabled = false;
@@ -255,10 +267,14 @@
 
         function downloadImage() {
             const canvas = document.getElementById('pixelCanvas');
-            const link = document.createElement('a');
-            link.download = 'arcade-pixel-masterpiece.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
+            try {
+                const link = document.createElement('a');
+                link.download = 'arcade-pixel-masterpiece.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                alert('Download failed due to browser security restrictions on local files.');
+            }
         }
     </script>
 
