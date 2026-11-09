@@ -6,12 +6,12 @@
     <title>Ultimate Arcade Pixel Converter - Crisp Suite</title>
     <style>
         :root {
-            --arcade-bg: #05050a;
-            --arcade-panel: #0d0f1a;
-            --arcade-border: #00ffcc;
-            --arcade-pink: #ff007f;
+            --arcade-bg: #0d050a;
+            --arcade-panel: #1a0d14;
+            --arcade-border: #ff007f;
+            --arcade-pink: #ff3399;
             --arcade-yellow: #ffee00;
-            --text-color: #00ffcc;
+            --text-color: #ff3399;
         }
         body {
             font-family: 'Courier New', Courier, monospace;
@@ -29,7 +29,7 @@
             background: var(--arcade-panel);
             border: 3px solid var(--arcade-border);
             padding: 25px;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4), inset 0 0 15px rgba(0, 255, 204, 0.2);
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.4), inset 0 0 15px rgba(255, 0, 127, 0.2);
             border-radius: 4px;
         }
         h1 {
@@ -37,7 +37,7 @@
             color: var(--arcade-yellow);
             font-size: 1.5rem;
             margin-bottom: 20px;
-            text-shadow: 2px 2px var(--arcade-pink);
+            text-shadow: 2px 2px var(--arcade-border);
             letter-spacing: 2px;
         }
         .grid-controls {
@@ -56,7 +56,7 @@
             display: block;
             margin-bottom: 6px;
             font-weight: bold;
-            color: var(--arcade-pink);
+            color: var(--arcade-yellow);
             font-size: 0.85rem;
             text-transform: uppercase;
         }
@@ -77,7 +77,7 @@
             font-size: 0.75rem;
         }
         select option {
-            background: #05050a;
+            background: #0d050a;
             color: var(--text-color);
         }
         button {
@@ -91,21 +91,21 @@
             text-transform: uppercase;
         }
         button:hover {
-            background-color: var(--arcade-pink);
-            border-color: var(--arcade-pink);
+            background-color: var(--arcade-border);
+            border-color: var(--arcade-border);
             color: #fff;
             box-shadow: 0 0 15px rgba(255, 0, 127, 0.7);
         }
         .preview-container {
             margin-top: 20px;
             text-align: center;
-            border: 2px dashed var(--arcade-pink);
+            border: 2px dashed var(--arcade-border);
             padding: 15px;
             min-height: 220px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #020205;
+            background: #050204;
         }
         canvas {
             max-width: 100%;
@@ -116,20 +116,20 @@
             margin-top: 25px;
             text-align: center;
             font-size: 0.75rem;
-            color: #64748b;
+            color: #94a3b8;
             line-height: 1.8;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
         .footer a {
-            color: var(--arcade-border);
+            color: var(--arcade-yellow);
             text-decoration: none;
         }
         .footer a:hover {
             text-decoration: underline;
         }
         .footer .kofi-link {
-            color: var(--arcade-pink);
+            color: var(--arcade-border);
             font-weight: bold;
         }
     </style>
@@ -172,7 +172,7 @@
         
         <div class="footer">
             HandleVault Digital • Crisp Suite Utility<br>
-            <a href="https://ko-fi.com//Handlevaultofficial" target="_blank" class="kofi-link">☕ Support on Ko-fi</a>
+            <a href="https://ko-fi.com" target="_blank" class="kofi-link">☕ Support on Ko-fi</a>
         </div>
     </div>
 
@@ -219,7 +219,6 @@
             const scaledWidth = Math.max(1, Math.floor(w / blockSize));
             const scaledHeight = Math.max(1, Math.floor(h / blockSize));
 
-            // Temporary small canvas for downsampling
             const tempCanvas = document.createElement('canvas');
             const tempCtx = tempCanvas.getContext('2d');
             tempCanvas.width = scaledWidth;
@@ -228,7 +227,6 @@
             tempCtx.imageSmoothingEnabled = false;
             tempCtx.drawImage(uploadedImage, 0, 0, scaledWidth, scaledHeight);
 
-            // Apply optional palette filters safely
             if (colorMode !== 'full') {
                 try {
                     const imgData = tempCtx.getImageData(0, 0, scaledWidth, scaledHeight);
@@ -252,11 +250,10 @@
                     }
                     tempCtx.putImageData(imgData, 0, 0);
                 } catch (err) {
-                    console.warn("Palette filter skipped due to security restriction.", err);
+                    console.warn("Palette filter skipped.", err);
                 }
             }
 
-            // Output upscaled pixelated canvas
             canvas.width = w;
             canvas.height = h;
             ctx.imageSmoothingEnabled = false;
@@ -273,7 +270,7 @@
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             } catch (err) {
-                alert('Download failed due to browser security restrictions on local files.');
+                alert('Download failed due to browser security restrictions.');
             }
         }
     </script>
