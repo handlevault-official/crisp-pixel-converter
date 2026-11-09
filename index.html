@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -39,15 +39,6 @@
             margin-bottom: 20px;
             text-shadow: 2px 2px var(--arcade-border);
             letter-spacing: 2px;
-        }
-        .grid-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        @media (max-width: 600px) {
-            .grid-controls { grid-template-columns: 1fr; }
         }
         .tool-group {
             margin-bottom: 15px;
@@ -113,7 +104,6 @@
             height: auto;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
-            -ms-interpolation-mode: nearest-neighbor;
         }
         .footer {
             margin-top: 25px;
@@ -147,30 +137,20 @@
             <input type="file" id="imageUpload" accept="image/*" onchange="handleImage(event)">
         </div>
 
-        <div class="grid-controls">
-            <div class="tool-group">
-                <label for="gridSizeSelect">> 2. Pixel Resolution Block</label>
-                <select id="gridSizeSelect" onchange="reprocessImage()">
-                    <option value="32">32px (Coarse Retro)</option>
-                    <option value="64" selected>64px (Standard Arcade)</option>
-                    <option value="128">128px (High-Res 8-Bit)</option>
-                </select>
-            </div>
-            <div class="tool-group">
-                <label for="paletteSelect">> 3. Color Palette Mode</label>
-                <select id="paletteSelect" onchange="reprocessImage()">
-                    <option value="full" selected>Full True Color</option>
-                    <option value="neon">Cyber Arcade Neon</option>
-                    <option value="pastel">Soft Retro Pastel</option>
-                </select>
-            </div>
+        <div class="tool-group">
+            <label for="paletteSelect">> 2. Color Palette Mode</label>
+            <select id="paletteSelect" onchange="reprocessImage()">
+                <option value="full" selected>Full True Color (Auto-Clarity)</option>
+                <option value="neon">Cyber Arcade Neon</option>
+                <option value="pastel">Soft Retro Pastel</option>
+            </select>
         </div>
 
         <div class="preview-container">
-            <canvas id="pixelCanvas">UPLOAD IMAGE TO GENERATE PIXEL GRID...</canvas>
+            <canvas id="pixelCanvas">UPLOAD IMAGE TO AUTO-READ & RENDER CRISP PIXEL GRID...</canvas>
         </div>
 
-        <button id="downloadBtn" style="display:none;" onclick="downloadImage()">>> Download Pixel Art Sheet <<</button>
+        <button id="downloadBtn" style="display:none;" onclick="downloadImage()">>> Download Crisp Pixel Sheet <<</button>
         
         <div class="footer">
             HandleVault Digital • Crisp Suite Utility<br>
@@ -212,21 +192,28 @@
             const canvas = document.getElementById('pixelCanvas');
             const ctx = canvas.getContext('2d');
             
-            const targetSize = parseInt(document.getElementById('gridSizeSelect').value);
             const paletteMode = document.getElementById('paletteSelect').value;
 
-            // Maintain aspect ratio to prevent crushing/distorting the image
-            const imgRatio = uploadedImage.width / uploadedImage.height;
-            let targetWidth = targetSize;
-            let targetHeight = targetSize;
+            // 1. Basahin ang eksaktong sukat ng pumasok na image file (Code-based reading)
+            let srcWidth = uploadedImage.width;
+            let srcHeight = uploadedImage.height;
 
-            if (imgRatio > 1) {
-                targetHeight = Math.round(targetSize / imgRatio);
-            } else {
-                targetWidth = Math.round(targetSize * imgRatio);
+            // 2. Awtomatikong mag-set ng magandang resolution limit para hindi madurog habang pinapanatili ang aspect ratio
+            const MAX_RES = 96; 
+            let targetWidth = srcWidth;
+            let targetHeight = srcHeight;
+
+            if (srcWidth > MAX_RES || srcHeight > MAX_RES) {
+                if (srcWidth > srcHeight) {
+                    targetWidth = MAX_RES;
+                    targetHeight = Math.round((srcHeight * MAX_RES) / srcWidth);
+                } else {
+                    targetHeight = MAX_RES;
+                    targetWidth = Math.round((srcWidth * MAX_RES) / srcHeight);
+                }
             }
 
-            // 1. Draw downscaled image using direct hardware crisp scaling
+            // Gamitin ang temp canvas para sa malinis na pagkuha ng pixel data nang walang blur
             const tempCanvas = document.createElement('canvas');
             const tempCtx = tempCanvas.getContext('2d');
             tempCanvas.width = targetWidth;
@@ -238,10 +225,10 @@
             const imgData = tempCtx.getImageData(0, 0, targetWidth, targetHeight);
             const data = imgData.data;
 
-            // 2. Scale up cleanly for display keeping sharp pixel edges (No blurring or crushing)
-            const scale = 8;
-            canvas.width = targetWidth * scale;
-            canvas.height = targetHeight * scale;
+            // 3. I-render sa final display canvas gamit ang tamang scale factor para laging sharp at solid
+            const scaleFactor = 8;
+            canvas.width = targetWidth * scaleFactor;
+            canvas.height = targetHeight * scaleFactor;
 
             ctx.imageSmoothingEnabled = false;
 
@@ -251,6 +238,7 @@
                     let r = data[i];
                     let g = data[i+1];
                     let b = data[i+2];
+                    let a = data[i+3];
 
                     if (paletteMode === 'neon') {
                         r = r > 120 ? 255 : 0;
@@ -262,8 +250,8 @@
                         b = Math.min(255, b + 50);
                     }
 
-                    ctx.fillStyle = `rgb(${r},${g},${b})`;
-                    ctx.fillRect(x * scale, y * scale, scale, scale);
+                    ctx.fillStyle = `rgba(${r},${g},${b},${a/255})`;
+                    ctx.fillRect(x * scaleFactor, y * scaleFactor, scaleFactor, scaleFactor);
                 }
             }
 
@@ -274,7 +262,7 @@
             const canvas = document.getElementById('pixelCanvas');
             try {
                 const link = document.createElement('a');
-                link.download = 'arcade-pixel-grid.png';
+                link.download = 'arcade-clean-pixel-sheet.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             } catch (err) {
@@ -285,4 +273,4 @@
 
 </body>
         </html>
-            
+         
