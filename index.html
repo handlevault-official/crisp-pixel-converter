@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Arcade Pixel Converter - Crisp Suite</title>
+    <title>Ultimate Arcade Pixel Studio - Crisp Suite</title>
     <style>
         :root {
             --arcade-bg: #0d050a;
@@ -25,7 +25,7 @@
         }
         .container {
             width: 100%;
-            max-width: 700px;
+            max-width: 750px;
             background: var(--arcade-panel);
             border: 3px solid var(--arcade-border);
             padding: 25px;
@@ -35,7 +35,7 @@
         h1 {
             text-align: center;
             color: var(--arcade-yellow);
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-bottom: 20px;
             text-shadow: 2px 2px var(--arcade-border);
             letter-spacing: 2px;
@@ -101,11 +101,12 @@
             text-align: center;
             border: 2px dashed var(--arcade-border);
             padding: 15px;
-            min-height: 220px;
+            min-height: 250px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #050204;
+            overflow: auto;
         }
         canvas {
             max-width: 100%;
@@ -146,26 +147,25 @@
 
         <div class="grid-controls">
             <div class="tool-group">
-                <label for="pixelSizeSelect">> 2. Pixel Resolution Block</label>
-                <select id="pixelSizeSelect" onchange="reprocessImage()">
-                    <option value="8">8px (Coarse Retro)</option>
-                    <option value="16" selected>16px (Standard Arcade)</option>
-                    <option value="32">32px (Detailed Sprite)</option>
-                    <option value="64">64px (High-Res 8-Bit)</option>
+                <label for="gridSizeSelect">> 2. Pixel Resolution Block</label>
+                <select id="gridSizeSelect" onchange="reprocessImage()">
+                    <option value="12">12px (Coarse Retro)</option>
+                    <option value="18" selected>18px (Standard Arcade)</option>
+                    <option value="24">24px (Detailed Sprite)</option>
                 </select>
             </div>
             <div class="tool-group">
-                <label for="colorModeSelect">> 3. Color Palette Mode</label>
-                <select id="colorModeSelect" onchange="reprocessImage()">
+                <label for="paletteSelect">> 3. Color Palette Mode</label>
+                <select id="paletteSelect" onchange="reprocessImage()">
                     <option value="full" selected>Full True Color</option>
-                    <option value="gameboy">Classic GameBoy (4-Shade)</option>
-                    <option value="monochrome">High Contrast Mono</option>
+                    <option value="neon">Cyber Arcade Neon</option>
+                    <option value="pastel">Soft Retro Pastel</option>
                 </select>
             </div>
         </div>
 
         <div class="preview-container">
-            <canvas id="pixelCanvas">WAITING FOR PLAYER INPUT...</canvas>
+            <canvas id="pixelCanvas">UPLOAD IMAGE TO GENERATE PIXEL ART...</canvas>
         </div>
 
         <button id="downloadBtn" style="display:none;" onclick="downloadImage()">>> Download Pixel Art Sheet <<</button>
@@ -191,7 +191,7 @@
                     processPixelArt();
                 }
                 img.onerror = function() {
-                    alert('Error loading image file. Please try another image.');
+                    alert('Error loading image file.');
                 }
                 img.src = e.target.result;
             }
@@ -210,54 +210,68 @@
             const canvas = document.getElementById('pixelCanvas');
             const ctx = canvas.getContext('2d');
             
-            const blockSize = parseInt(document.getElementById('pixelSizeSelect').value);
-            const colorMode = document.getElementById('colorModeSelect').value;
+            const targetCols = parseInt(document.getElementById('gridSizeSelect').value);
+            const paletteMode = document.getElementById('paletteSelect').value;
 
-            const w = uploadedImage.width;
-            const h = uploadedImage.height;
-            
-            const scaledWidth = Math.max(1, Math.floor(w / blockSize));
-            const scaledHeight = Math.max(1, Math.floor(h / blockSize));
-
+            // 1. Downsample source image to target grid dimensions
             const tempCanvas = document.createElement('canvas');
             const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = scaledWidth;
-            tempCanvas.height = scaledHeight;
+            tempCanvas.width = targetCols;
+            tempCanvas.height = targetCols;
 
             tempCtx.imageSmoothingEnabled = false;
-            tempCtx.drawImage(uploadedImage, 0, 0, scaledWidth, scaledHeight);
+            tempCtx.drawImage(uploadedImage, 0, 0, targetCols, targetCols);
 
-            if (colorMode !== 'full') {
-                try {
-                    const imgData = tempCtx.getImageData(0, 0, scaledWidth, scaledHeight);
-                    const data = imgData.data;
-                    for (let i = 0; i < data.length; i += 4) {
-                        const avg = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
-                        if (colorMode === 'monochrome') {
-                            const val = avg > 128 ? 255 : 0;
-                            data[i] = val; data[i+1] = val; data[i+2] = val;
-                        } else if (colorMode === 'gameboy') {
-                            let shade = Math.floor(avg / 64);
-                            const gbColors = [
-                                [15, 56, 15],     
-                                [48, 98, 48],     
-                                [139, 172, 15],   
-                                [155, 188, 15]    
-                            ];
-                            const c = gbColors[Math.min(shade, 3)];
-                            data[i] = c[0]; data[i+1] = c[1]; data[i+2] = c[2];
-                        }
+            const imgData = tempCtx.getImageData(0, 0, targetCols, targetCols);
+            const data = imgData.data;
+
+            // 2. Render crisp grid-aligned rounded pixel blocks to prevent blurriness
+            const blockSize = 20; 
+            const spacing = 2;   // Grid separation lines
+            const totalSize = targetCols * (blockSize + spacing) + spacing;
+
+            canvas.width = totalSize;
+            canvas.height = totalSize;
+
+            // Dark arcade board background for crisp contrast
+            ctx.fillStyle = '#11050b';
+            ctx.fillRect(0, 0, totalSize, totalSize);
+
+            for (let y = 0; y < targetCols; y++) {
+                for (let x = 0; x < targetCols; x++) {
+                    const i = (y * targetCols + x) * 4;
+                    let r = data[i];
+                    let g = data[i+1];
+                    let b = data[i+2];
+
+                    if (paletteMode === 'neon') {
+                        r = r > 120 ? 255 : 0;
+                        g = g > 120 ? 255 : 0;
+                        b = b > 120 ? 255 : 0;
+                    } else if (paletteMode === 'pastel') {
+                        r = Math.min(255, r + 45);
+                        g = Math.max(0, g - 10);
+                        b = Math.min(255, b + 45);
                     }
-                    tempCtx.putImageData(imgData, 0, 0);
-                } catch (err) {
-                    console.warn("Palette filter skipped.", err);
+
+                    const posX = x * (blockSize + spacing) + spacing;
+                    const posY = y * (blockSize + spacing) + spacing;
+
+                    // Draw rounded grid-styled pixel block with soft corner radius
+                    ctx.fillStyle = `rgb(${r},${g},${b})`;
+                    if (ctx.roundRect) {
+                        ctx.beginPath();
+                        ctx.roundRect(posX, posY, blockSize, blockSize, 4);
+                        ctx.fill();
+                    } else {
+                        ctx.fillRect(posX, posY, blockSize, blockSize);
+                    }
+
+                    // Subtle highlight reflection on top-left of each pixel block for depth
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+                    ctx.fillRect(posX + 2, posY + 2, blockSize * 0.4, blockSize * 0.4);
                 }
             }
-
-            canvas.width = w;
-            canvas.height = h;
-            ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(tempCanvas, 0, 0, scaledWidth, scaledHeight, 0, 0, w, h);
 
             document.getElementById('downloadBtn').style.display = 'block';
         }
@@ -266,7 +280,7 @@
             const canvas = document.getElementById('pixelCanvas');
             try {
                 const link = document.createElement('a');
-                link.download = 'arcade-pixel-masterpiece.png';
+                link.download = 'arcade-pixel-studio-sheet.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             } catch (err) {
