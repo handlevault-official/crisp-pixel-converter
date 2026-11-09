@@ -112,6 +112,7 @@
             max-width: 100%;
             height: auto;
             image-rendering: pixelated;
+            image-rendering: crisp-edges;
         }
         .footer {
             margin-top: 25px;
@@ -149,9 +150,9 @@
             <div class="tool-group">
                 <label for="gridSizeSelect">> 2. Pixel Resolution Block</label>
                 <select id="gridSizeSelect" onchange="reprocessImage()">
-                    <option value="12">12px (Coarse Retro)</option>
-                    <option value="18" selected>18px (Standard Arcade)</option>
-                    <option value="24">24px (Detailed Sprite)</option>
+                    <option value="16">16px (Coarse Retro)</option>
+                    <option value="32" selected>32px (Standard Arcade)</option>
+                    <option value="64">64px (High-Res 8-Bit)</option>
                 </select>
             </div>
             <div class="tool-group">
@@ -165,7 +166,7 @@
         </div>
 
         <div class="preview-container">
-            <canvas id="pixelCanvas">UPLOAD IMAGE TO GENERATE PIXEL ART...</canvas>
+            <canvas id="pixelCanvas">UPLOAD IMAGE TO GENERATE PIXEL GRID...</canvas>
         </div>
 
         <button id="downloadBtn" style="display:none;" onclick="downloadImage()">>> Download Pixel Art Sheet <<</button>
@@ -210,36 +211,31 @@
             const canvas = document.getElementById('pixelCanvas');
             const ctx = canvas.getContext('2d');
             
-            const targetCols = parseInt(document.getElementById('gridSizeSelect').value);
+            const targetSize = parseInt(document.getElementById('gridSizeSelect').value);
             const paletteMode = document.getElementById('paletteSelect').value;
 
-            // 1. Downsample source image to target grid dimensions
+            // 1. Downsample image to exact pixel grid dimensions using nearest-neighbor (crisp)
             const tempCanvas = document.createElement('canvas');
             const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = targetCols;
-            tempCanvas.height = targetCols;
+            tempCanvas.width = targetSize;
+            tempCanvas.height = targetSize;
 
             tempCtx.imageSmoothingEnabled = false;
-            tempCtx.drawImage(uploadedImage, 0, 0, targetCols, targetCols);
+            tempCtx.drawImage(uploadedImage, 0, 0, targetSize, targetSize);
 
-            const imgData = tempCtx.getImageData(0, 0, targetCols, targetCols);
+            const imgData = tempCtx.getImageData(0, 0, targetSize, targetSize);
             const data = imgData.data;
 
-            // 2. Render crisp grid-aligned rounded pixel blocks to prevent blurriness
-            const blockSize = 20; 
-            const spacing = 2;   // Grid separation lines
-            const totalSize = targetCols * (blockSize + spacing) + spacing;
+            // 2. Render as true sharp pixel squares on final canvas (No blur, solid pixel grids)
+            const scale = 12; // Output multiplier for sharp rendering size
+            canvas.width = targetSize * scale;
+            canvas.height = targetSize * scale;
 
-            canvas.width = totalSize;
-            canvas.height = totalSize;
+            ctx.imageSmoothingEnabled = false;
 
-            // Dark arcade board background for crisp contrast
-            ctx.fillStyle = '#11050b';
-            ctx.fillRect(0, 0, totalSize, totalSize);
-
-            for (let y = 0; y < targetCols; y++) {
-                for (let x = 0; x < targetCols; x++) {
-                    const i = (y * targetCols + x) * 4;
+            for (let y = 0; y < targetSize; y++) {
+                for (let x = 0; x < targetSize; x++) {
+                    const i = (y * targetSize + x) * 4;
                     let r = data[i];
                     let g = data[i+1];
                     let b = data[i+2];
@@ -249,27 +245,13 @@
                         g = g > 120 ? 255 : 0;
                         b = b > 120 ? 255 : 0;
                     } else if (paletteMode === 'pastel') {
-                        r = Math.min(255, r + 45);
-                        g = Math.max(0, g - 10);
-                        b = Math.min(255, b + 45);
+                        r = Math.min(255, r + 40);
+                        g = Math.max(0, g - 15);
+                        b = Math.min(255, b + 50);
                     }
 
-                    const posX = x * (blockSize + spacing) + spacing;
-                    const posY = y * (blockSize + spacing) + spacing;
-
-                    // Draw rounded grid-styled pixel block with soft corner radius
                     ctx.fillStyle = `rgb(${r},${g},${b})`;
-                    if (ctx.roundRect) {
-                        ctx.beginPath();
-                        ctx.roundRect(posX, posY, blockSize, blockSize, 4);
-                        ctx.fill();
-                    } else {
-                        ctx.fillRect(posX, posY, blockSize, blockSize);
-                    }
-
-                    // Subtle highlight reflection on top-left of each pixel block for depth
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-                    ctx.fillRect(posX + 2, posY + 2, blockSize * 0.4, blockSize * 0.4);
+                    ctx.fillRect(x * scale, y * scale, scale, scale);
                 }
             }
 
@@ -280,7 +262,7 @@
             const canvas = document.getElementById('pixelCanvas');
             try {
                 const link = document.createElement('a');
-                link.download = 'arcade-pixel-studio-sheet.png';
+                link.download = 'arcade-pixel-grid.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             } catch (err) {
@@ -290,5 +272,4 @@
     </script>
 
 </body>
-        </html>
-            
+</html>
