@@ -1,54 +1,196 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#18251f"><meta name="description" content="Choose a seasonal look for Pixel Studio, Invoice Studio, Resume & CV Studio, and Moonlit Beads."><title>Seasonal Studio — Pixel Studio</title>
-<style>
-:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#202638;background:#f4f6f7;--green:#456858;--line:#dfe5e2;--muted:#66736c}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(135deg,#f3f5f2,#eaf1ee)}button,select{font:inherit}button{cursor:pointer}.shell{max-width:1500px;margin:auto;padding:20px clamp(14px,3vw,38px)}.header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:17px}.brand{display:flex;align-items:center;gap:12px}.brand-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:linear-gradient(145deg,#c8dfcf,#718f7b);font-size:22px;color:#21362a}.brand h1{margin:0;font-size:21px;letter-spacing:-.04em}.brand p{margin:3px 0 0;color:var(--muted);font-size:12px}.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.select-wrap{display:flex;align-items:center;gap:7px;color:#45524a;font-size:12px;font-weight:700}.select-wrap select{border:1px solid var(--line);border-radius:8px;background:#fff;padding:9px 30px 9px 10px;color:#26352c}.button{border:1px solid var(--line);border-radius:8px;background:white;padding:9px 12px;color:#27372d;font-size:12px;font-weight:700}.button:hover{border-color:#9bb2a2;background:#f8fbf8}.support-link{display:inline-flex;align-items:center;gap:7px;border:1px solid #d5c6e8;border-radius:8px;padding:9px 12px;background:#fff8fc;color:#74436d;text-decoration:none;font-size:12px;font-weight:750}.support-link:hover{background:#f8eaf3;border-color:#c49cbb}.hero{padding:18px 20px;margin-bottom:13px;border:1px solid var(--line);border-radius:14px;background:#ffffffc9;display:flex;align-items:center;justify-content:space-between;gap:15px}.hero h2{margin:0;font-size:22px;letter-spacing:-.04em}.hero p{margin:5px 0 0;color:var(--muted);font-size:12px}.season-note{font-size:12px;color:var(--green);font-weight:750}.app-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px}.app-tab{border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:#fff;color:#45524a;font-size:12px;font-weight:700}.app-tab.active{background:var(--green);border-color:var(--green);color:white}.frame-wrap{height:calc(100vh - 242px);min-height:520px;overflow:hidden;border:1px solid #dfe5e2;border-radius:13px;background:white;box-shadow:0 10px 32px #1c3b2b14}.frame-wrap iframe{display:block;width:100%;height:100%;border:0;background:#fff}.privacy{margin:10px 2px 0;color:var(--muted);font-size:11px;line-height:1.5}.toast{position:fixed;right:16px;bottom:16px;padding:10px 13px;border-radius:8px;background:#24362b;color:white;opacity:0;transition:.2s}.toast.show{opacity:1}.hidden{display:none}@media(max-width:650px){.hero{align-items:flex-start;flex-direction:column}.frame-wrap{height:calc(100vh - 300px);min-height:440px}.header{align-items:flex-start}.controls{width:100%}.select-wrap{flex:1}.select-wrap select{flex:1}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#18251f">
+  <meta name="description" content="Explore Handlevault's Crisp Suite Studio through seasonal picks tailored to the time of year. Choose a tool and theme that fit your needs.">
+  <title>Seasonal Studio — Crisp Suite Studio</title>
+  <style>
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#202638;background:#f4f6f7;--green:#456858;--line:#dfe5e2;--muted:#66736c;--panel:#fff;--accent:#537563}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(145deg,#f4f6f7,#edf3ef);color:#202638}
+    button,select{font:inherit}button{cursor:pointer}.shell{max-width:1180px;margin:auto;padding:28px 20px 60px}
+    .header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}
+    .brand{display:flex;align-items:center;gap:12px}.brand-icon{width:44px;height:44px;display:grid;place-items:center;border-radius:14px;background:#456858;color:white;font-size:21px}
+    h1{font-size:22px;margin:0}.brand p{margin:3px 0 0;color:var(--muted);font-size:13px}
+    .support{padding:10px 14px;border-radius:999px;background:#29abe0;color:white;text-decoration:none;font-size:13px;font-weight:750;white-space:nowrap}
+    .hero{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:center;padding:clamp(22px,4vw,36px);background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 12px 30px #2135280c;margin-bottom:20px}
+    .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.13em;font-weight:800;color:#537563}
+    h2{font-size:clamp(25px,4vw,38px);letter-spacing:-.045em;line-height:1.1;margin:8px 0 10px}
+    .hero p{margin:0;color:#66736c;line-height:1.65;max-width:670px}
+    .pick{padding:18px;border-radius:16px;background:#f5f8f6;border:1px solid #e1e9e3}
+    .pick-top{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#66736c;font-size:12px;font-weight:700}
+    .pick strong{display:block;font-size:20px;margin:9px 0 4px}.pick p{font-size:13px;line-height:1.5}
+    .pick-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+    .button{border:1px solid #d5e0d8;border-radius:9px;padding:9px 12px;background:white;color:#26372d;font-size:13px;font-weight:700}
+    .button.primary{background:#456858;border-color:#456858;color:white}
+    .controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px;margin-bottom:14px;background:#fff;border:1px solid var(--line);border-radius:14px}
+    .controls label{font-size:13px;font-weight:700}.controls select{border:1px solid #d5e0d8;border-radius:8px;background:#fff;padding:9px 12px;color:#24342b}
+    .hint{color:#66736c;font-size:12px;margin-left:auto}
+    .app-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+    .app-tab{border:1px solid var(--line);border-radius:12px;background:#fff;color:#34443a;padding:12px;text-align:left;font-weight:750}
+    .app-tab span{display:block;color:#718076;font-size:11px;font-weight:500;margin-top:3px}
+    .app-tab.active{border-color:#537563;background:#edf5ef;box-shadow:0 0 0 2px #53756318}
+    .frame-wrap{height:min(78vh,900px);min-height:560px;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 12px 30px #2135280c}
+    iframe{width:100%;height:100%;border:0;background:#fff}
+    .privacy{font-size:12px;color:#66736c;line-height:1.6;margin:13px 2px 0}
+    @media(max-width:760px){.hero{grid-template-columns:1fr}.app-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.hint{margin-left:0;width:100%}.frame-wrap{min-height:65vh}}
+    @media(max-width:480px){.header{align-items:flex-start}.support{font-size:11px;padding:9px 10px}.app-tab{font-size:12px;padding:10px}.app-tab span{font-size:10px}.frame-wrap{min-height:620px}}
+  </style>
 </head>
-<body><main class="shell">
-<header class="header"><div class="brand"><div class="brand-icon" aria-hidden="true">✿</div><div><h1>Seasonal Studio</h1><p>Four creative tools, dressed for the season</p></div></div><div class="controls"><label class="select-wrap" for="seasonSelect">Season<select id="seasonSelect"><option value="auto">Automatic · local calendar</option><option value="spring">Spring · blossom</option><option value="summer">Summer · sunlit</option><option value="autumn">Autumn · harvest</option><option value="winter">Winter · starlight</option></select></label><button class="button" id="resetButton" type="button">Reset seasonal choice</button><a class="support-link" href="https://ko-fi.com/handlevaultofficial" target="_blank" rel="noopener noreferrer">☕ Support on Ko-fi</a></div></header>
-<section class="hero"><div><h2 id="heroTitle">A little seasonal refresh</h2><p id="heroDescription">Choose an app and a seasonal palette. Your app content and saved work stay yours.</p></div><div class="season-note" id="seasonNote" aria-live="polite"></div></section>
-<nav class="app-tabs" aria-label="Choose an app"><button class="app-tab active" data-app="pixel" type="button">Pixel Studio</button><button class="app-tab" data-app="invoice" type="button">Invoice Studio</button><button class="app-tab" data-app="resume" type="button">Resume & CV</button><button class="app-tab" data-app="beads" type="button">Moonlit Beads</button></nav>
-<section class="frame-wrap"><iframe id="appFrame" title="Selected creative studio" src="index.html"></iframe></section>
-<p class="privacy">Seasonal Studio applies a visual theme to the selected app while it is open here. It does not change your documents or bead palette. App data remains in your browser; no image or personal information is uploaded.</p>
-</main><div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script>
-(()=>{
- const $=id=>document.getElementById(id), frame=$('appFrame'), key='pixel-studio-season-preference-v1';
- const apps={pixel:{file:'index.html',title:'Pixel Studio'},invoice:{file:'invoice.html',title:'Invoice Studio'},resume:{file:'resume.html',title:'Resume & CV Studio'},beads:{file:'moonlit-beads.html',title:'Moonlit Beads'}};
- const seasons={
-  spring:{label:'Spring · Blossom',light:'#f6edf2',surface:'#fff9fc',ink:'#352a35',muted:'#827482',line:'#ecdce8',accent:'#bf6c91',soft:'#f9eaf1',deep:'#302431',deepPanel:'#3b2c3b',deepLine:'#60465c',deepText:'#fcf1f8',deepMuted:'#d2b9cb',page:'#3b2937',surfaceInk:'#faf3f6',stage:'#402c3b'},
-  summer:{label:'Summer · Sunlit',light:'#fff5e4',surface:'#fffdf8',ink:'#302b22',muted:'#81725b',line:'#eee1c8',accent:'#c17a27',soft:'#fff1d7',deep:'#30271c',deepPanel:'#40331f',deepLine:'#685338',deepText:'#fff6e6',deepMuted:'#dbc6a0',page:'#3b2e1d',surfaceInk:'#fff8eb',stage:'#45351e'},
-  autumn:{label:'Autumn · Harvest',light:'#f8eee7',surface:'#fffaf6',ink:'#392b27',muted:'#80675c',line:'#ead8cc',accent:'#a95835',soft:'#f8e6d9',deep:'#30231f',deepPanel:'#402b24',deepLine:'#694536',deepText:'#fff2e9',deepMuted:'#d9b6a2',page:'#38271f',surfaceInk:'#fff5ee',stage:'#412c22'},
-  winter:{label:'Winter · Starlight',light:'#edf2f8',surface:'#fbfdff',ink:'#243044',muted:'#68798d',line:'#d8e1eb',accent:'#557eae',soft:'#e7f0fa',deep:'#172231',deepPanel:'#202e40',deepLine:'#3a4d66',deepText:'#edf6ff',deepMuted:'#b5c8dc',page:'#182635',surfaceInk:'#f2f7fc',stage:'#1d2b3b'}
- };
- let app='pixel',timer;
- function autoSeason(){const month=new Date().getMonth();if(month>=2&&month<=4)return'spring';if(month>=5&&month<=7)return'summer';if(month>=8&&month<=10)return'autumn';return'winter'}
- function currentSeason(){const v=$('seasonSelect').value;return v==='auto'?autoSeason():v}
- function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>t.classList.remove('show'),2100)}
- function themeFrame(){const doc=frame.contentDocument;if(!doc||!doc.documentElement)return;const s=seasons[currentSeason()],old=doc.getElementById('seasonal-theme-injected');if(old)old.remove();const style=doc.createElement('style');style.id='seasonal-theme-injected';style.textContent=`
- /* Seasonal Studio visual theme. Only visual tokens and surfaces are overridden. */
- :root{--accent:${s.accent}!important;--resume-accent:${s.accent}!important;--primary:${s.accent}!important;--line:${s.line}!important;--muted:${s.muted}!important;--soft:${s.soft}!important;--page:${s.light}!important;--surface:${s.surface}!important;--bg:${s.deep}!important;--panel:${s.deepPanel}!important;--panel-2:${s.deepPanel}!important;--panel2:${s.deepPanel}!important;--text:${s.deepText}!important;--ink:${s.ink}!important;--border:${s.deepLine}!important;color-scheme:light dark}
- body{background-color:${app==='invoice'||app==='resume'?s.light:s.page}!important;color:${app==='invoice'||app==='resume'?s.ink:s.deepText}!important;background-image:radial-gradient(ellipse at 10% 0%,${s.accent}18,transparent 42%)!important;}
- button, a.btn, .btn{transition:background-color .18s,border-color .18s,color .18s}
- .primary,.btn.primary,.btn-main,.add,.add-item,.add-item:hover{background-color:${s.accent}!important;border-color:${s.accent}!important}
- .app-tab.active,.brand-icon,.brand-mark,.logo{background-color:${s.accent}!important;border-color:${s.accent}!important}
- .paper,.resume,.panel,.editor,.preview-shell,.sidebar,.main-content,.card{border-color:${s.line}!important}
- .resume{--resume-accent:${s.accent}!important;--resume-tint:${s.soft}!important;--resume-rule:${s.line}!important}
- .stage,.paper-wrap{background-color:${s.stage}!important}
- .invoice-title h2,.thanks,.resume-role,.resume-section h2{color:${s.accent}!important}
- .seasonal-support{position:fixed!important;right:16px!important;bottom:16px!important;z-index:9999!important;display:inline-flex!important;align-items:center!important;gap:6px!important;padding:10px 13px!important;border:1px solid ${s.accent}!important;border-radius:999px!important;background:${s.surface}f2!important;color:${s.accent}!important;font:700 12px/1.2 system-ui,sans-serif!important;text-decoration:none!important;box-shadow:0 4px 16px #0002!important}
- .seasonal-support:hover{filter:brightness(.96)!important;transform:translateY(-1px)!important}
- @media print{.seasonal-support{display:none!important}}
- `;doc.head.appendChild(style);if(!doc.querySelector('a.seasonal-support')){const a=doc.createElement('a');a.className='seasonal-support';a.href='https://ko-fi.com/handlevaultofficial';a.target='_blank';a.rel='noopener noreferrer';a.textContent='☕ Support on Ko-fi';a.setAttribute('aria-label','Support Handlevault on Ko-fi');doc.body.appendChild(a)}doc.documentElement.dataset.season=currentSeason();$('seasonNote').textContent=`Now showing ${s.label.toLowerCase()}`;$('heroTitle').textContent=`${s.label} studio`;}
- function applyChoice(){try{localStorage.setItem(key,$('seasonSelect').value)}catch{}themeFrame();}
- function chooseApp(next){app=next;document.querySelectorAll('.app-tab').forEach(b=>b.classList.toggle('active',b.dataset.app===app));frame.src=apps[app].file;frame.title=apps[app].title;}
- document.querySelectorAll('.app-tab').forEach(b=>b.addEventListener('click',()=>chooseApp(b.dataset.app)));
- $('seasonSelect').addEventListener('change',()=>{applyChoice();toast(`Applied ${seasons[currentSeason()].label} theme`)});
- $('resetButton').addEventListener('click',()=>{$('seasonSelect').value='auto';try{localStorage.removeItem(key)}catch{}themeFrame();toast('Season now follows your local calendar')});
- frame.addEventListener('load',themeFrame);
- try{const saved=localStorage.getItem(key);if(saved&&['auto','spring','summer','autumn','winter'].includes(saved))$('seasonSelect').value=saved}catch{}
- $('seasonSelect').dispatchEvent(new Event('change'));
-})();
-</script></body></html>
+<body>
+  <main class="shell">
+    <header class="header">
+      <div class="brand"><div class="brand-icon" aria-hidden="true">✿</div><div><h1>Seasonal Studio</h1><p>Seasonal picks from Handlevault · Crisp Suite Studio</p></div></div>
+      <a class="support" href="https://ko-fi.com/handlevaultofficial" target="_blank" rel="noopener noreferrer">Support Handlevault on Ko-fi</a>
+    </header>
+
+    <section class="hero" aria-labelledby="heroTitle">
+      <div>
+        <div class="eyebrow" id="seasonEyebrow">A seasonal pick</div>
+        <h2 id="heroTitle">Tools for the season and what you need now.</h2>
+        <p id="heroDescription">Seasonal Studio highlights one Crisp Suite Studio product as a timely starting point. The pick is a curated suggestion—not a live popularity ranking—and you can switch to any other app whenever you like.</p>
+      </div>
+      <aside class="pick" aria-live="polite">
+        <div class="pick-top"><span>THIS SEASON'S PICK</span><span id="seasonLabel"></span></div>
+        <strong id="pickName">Pixel Studio</strong>
+        <p id="pickReason"></p>
+        <div class="pick-actions">
+          <button class="button primary" id="openPick" type="button">Open seasonal pick</button>
+          <button class="button" id="followPick" type="button">Follow seasonal picks: On</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="controls" aria-label="Seasonal settings">
+      <label for="seasonSelect">Choose a season</label>
+      <select id="seasonSelect">
+        <option value="auto">Automatic (local season)</option>
+        <option value="spring">Spring · Blossom</option>
+        <option value="summer">Summer · Sunlit</option>
+        <option value="autumn">Autumn · Harvest</option>
+        <option value="winter">Winter · Starlight</option>
+      </select>
+      <span class="hint">The season updates the featured app and the visual accent theme.</span>
+    </section>
+
+    <nav class="app-tabs" aria-label="Choose a product">
+      <button class="app-tab active" data-app="pixel" type="button">Pixel Studio<span>Pixel-art editor</span></button>
+      <button class="app-tab" data-app="invoice" type="button">Invoice Studio<span>Invoices and PDF</span></button>
+      <button class="app-tab" data-app="resume" type="button">Resume &amp; CV Studio<span>Career documents</span></button>
+      <button class="app-tab" data-app="beads" type="button">Moonlit Beads<span>Bead-pattern charts</span></button>
+    </nav>
+
+    <section class="frame-wrap"><iframe id="appFrame" title="Pixel Studio" src="pixel-studio.html"></iframe></section>
+    <p class="privacy">Seasonal Studio changes the featured product and applies a visual theme while an app is open here. It does not claim to measure app popularity or live trends. Your documents and drafts remain in your browser. Images are processed locally by the individual apps. <a href="https://ko-fi.com/handlevaultofficial" target="_blank" rel="noopener noreferrer">Support Handlevault on Ko-fi</a>.</p>
+  </main>
+  <script>
+    (() => {
+      const $ = id => document.getElementById(id);
+      const frame = $('appFrame');
+      const storageKey = 'crisp-suite-season-preference-v2';
+      const products = {
+        pixel: { file: 'pixel-studio.html', title: 'Pixel Studio' },
+        invoice: { file: 'invoice.html', title: 'Invoice Studio' },
+        resume: { file: 'resume.html', title: 'Resume & CV Studio' },
+        beads: { file: 'moonlit-beads.html', title: 'Moonlit Beads' }
+      };
+      const seasons = {
+        spring: { label: 'Spring · Blossom', pick: 'pixel', reason: 'A fresh season for sketching ideas and making new pixel-art projects.', light: '#f6edf2', surface: '#fff9fc', ink: '#352a35', muted: '#827482', line: '#ecdce8', accent: '#bf6c91', soft: '#f9eaf1', page: '#302431', panel: '#3b2c3b', deepLine: '#60465d', deepText: '#f8edf6', stage: '#3a2c39' },
+        summer: { label: 'Summer · Sunlit', pick: 'beads', reason: 'A colorful pick for creative, hands-on projects and bead-pattern making.', light: '#fff5e4', surface: '#fffdf8', ink: '#302b22', muted: '#81725b', line: '#eee1c8', accent: '#c17a27', soft: '#fff1d7', page: '#30271c', panel: '#40331f', deepLine: '#68533a', deepText: '#fff7e8', stage: '#3c3022' },
+        autumn: { label: 'Autumn · Harvest', pick: 'invoice', reason: 'A practical seasonal pick for organizing client work and preparing invoices.', light: '#f8eee7', surface: '#fffaf6', ink: '#392b27', muted: '#80675c', line: '#ead8cc', accent: '#a95835', soft: '#f8e6d9', page: '#30231f', panel: '#402b24', deepLine: '#69483b', deepText: '#fff3ec', stage: '#382923' },
+        winter: { label: 'Winter · Starlight', pick: 'resume', reason: 'A good time to refresh your resume or CV and plan for opportunities ahead.', light: '#edf2f8', surface: '#fbfdff', ink: '#243044', muted: '#68798d', line: '#d8e1eb', accent: '#557eae', soft: '#e7f0fa', page: '#172231', panel: '#202e40', deepLine: '#3b5068', deepText: '#eef5ff', stage: '#1b2939' }
+      };
+      let selectedApp = 'pixel';
+      let followSeasonalPick = true;
+      let toastTimer;
+
+      function localSeason() {
+        const month = new Date().getMonth();
+        if (month >= 2 && month <= 4) return 'spring';
+        if (month >= 5 && month <= 7) return 'summer';
+        if (month >= 8 && month <= 10) return 'autumn';
+        return 'winter';
+      }
+      function activeSeason() {
+        const value = $('seasonSelect').value;
+        return seasons[value === 'auto' ? localSeason() : value];
+      }
+      function announce(message) {
+        let toast = document.getElementById('toast');
+        if (!toast) {
+          toast = document.createElement('div'); toast.id = 'toast'; toast.setAttribute('role', 'status');
+          toast.style.cssText = 'position:fixed;left:50%;bottom:20px;transform:translateX(-50%);padding:10px 14px;border-radius:10px;background:#24342b;color:white;box-shadow:0 5px 20px #0002;z-index:10';
+          document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.remove(), 2200);
+      }
+      function themeFrame() {
+        try {
+          const doc = frame.contentDocument;
+          if (!doc || !doc.documentElement) return;
+          const season = activeSeason();
+          doc.getElementById('seasonal-theme-injected')?.remove();
+          const style = doc.createElement('style');
+          style.id = 'seasonal-theme-injected';
+          style.textContent = `
+            :root{--accent:${season.accent}!important;--resume-accent:${season.accent}!important;--primary:${season.accent}!important;--line:${season.line}!important;--muted:${season.muted}!important;--soft:${season.soft}!important;--page:${season.light}!important;--surface:${season.surface}!important;--ink:${season.ink}!important;--panel:${season.panel}!important;--deep-line:${season.deepLine}!important}
+            body{background-color:${selectedApp==='invoice'||selectedApp==='resume'?season.light:season.page}!important;color:${selectedApp==='invoice'||selectedApp==='resume'?season.ink:season.deepText}!important}
+            button,.btn,.primary,.add-item{--accent:${season.accent}!important}
+            .primary,.btn.primary,.btn-main,.add,.add-item{background-color:${season.accent}!important;border-color:${season.accent}!important}
+            .brand-icon,.brand-mark,.logo{background-color:${season.accent}!important;border-color:${season.accent}!important}
+            .paper,.resume,.panel,.editor,.preview-shell,.sidebar,.main-content,.card{border-color:${season.line}!important}
+            .resume{--resume-accent:${season.accent}!important;--resume-tint:${season.soft}!important;--resume-rule:${season.line}!important}
+            .stage,.paper-wrap{background-color:${season.stage}!important}
+            .invoice-title h2,.thanks,.resume-role,.resume-section h2{color:${season.accent}!important}
+            @media print{.seasonal-support{display:none!important}}
+          `;
+          doc.head.appendChild(style);
+        } catch { /* The selected app remains usable if browser policy blocks theme injection. */ }
+      }
+      function showSeason() {
+        const season = activeSeason();
+        const pick = products[season.pick];
+        $('seasonLabel').textContent = season.label;
+        $('pickName').textContent = pick.title;
+        $('pickReason').textContent = season.reason;
+        $('seasonEyebrow').textContent = `${season.label} · curated for the season`;
+        $('heroTitle').textContent = `A timely tool for ${season.label.split(' · ')[0].toLowerCase()}.`;
+        if (followSeasonalPick) selectApp(season.pick, false);
+        themeFrame();
+      }
+      function selectApp(key, manual = true) {
+        if (!products[key]) return;
+        if (manual) followSeasonalPick = false;
+        selectedApp = key;
+        document.querySelectorAll('.app-tab').forEach(button => button.classList.toggle('active', button.dataset.app === key));
+        if (frame.getAttribute('src') !== products[key].file) frame.src = products[key].file;
+        frame.title = products[key].title;
+        $('followPick').textContent = `Follow seasonal picks: ${followSeasonalPick ? 'On' : 'Off'}`;
+        frame.addEventListener('load', themeFrame, { once: true });
+        themeFrame();
+      }
+      document.querySelectorAll('.app-tab').forEach(button => button.addEventListener('click', () => selectApp(button.dataset.app)));
+      $('seasonSelect').addEventListener('change', () => {
+        try { localStorage.setItem(storageKey, $('seasonSelect').value); } catch {}
+        showSeason();
+        announce(`${activeSeason().label} seasonal pick updated`);
+      });
+      $('followPick').addEventListener('click', () => {
+        followSeasonalPick = !followSeasonalPick;
+        $('followPick').textContent = `Follow seasonal picks: ${followSeasonalPick ? 'On' : 'Off'}`;
+        if (followSeasonalPick) selectApp(activeSeason().pick, false);
+        announce(followSeasonalPick ? 'Following the seasonal pick' : 'You can choose any app');
+      });
+      $('openPick').addEventListener('click', () => selectApp(activeSeason().pick, false));
+      try {
+        const saved = localStorage.getItem(storageKey);
+        if (saved && ['auto', 'spring', 'summer', 'autumn', 'winter'].includes(saved)) $('seasonSelect').value = saved;
+      } catch {}
+      $('seasonSelect').dispatchEvent(new Event('change'));
+    })();
+  </script>
+</body>
+</html>
