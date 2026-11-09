@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -113,6 +113,7 @@
             height: auto;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
+            -ms-interpolation-mode: nearest-neighbor;
         }
         .footer {
             margin-top: 25px;
@@ -150,9 +151,9 @@
             <div class="tool-group">
                 <label for="gridSizeSelect">> 2. Pixel Resolution Block</label>
                 <select id="gridSizeSelect" onchange="reprocessImage()">
-                    <option value="16">16px (Coarse Retro)</option>
-                    <option value="32" selected>32px (Standard Arcade)</option>
-                    <option value="64">64px (High-Res 8-Bit)</option>
+                    <option value="32">32px (Coarse Retro)</option>
+                    <option value="64" selected>64px (Standard Arcade)</option>
+                    <option value="128">128px (High-Res 8-Bit)</option>
                 </select>
             </div>
             <div class="tool-group">
@@ -214,28 +215,39 @@
             const targetSize = parseInt(document.getElementById('gridSizeSelect').value);
             const paletteMode = document.getElementById('paletteSelect').value;
 
-            // 1. Downsample image to exact pixel grid dimensions using nearest-neighbor (crisp)
+            // Maintain aspect ratio to prevent crushing/distorting the image
+            const imgRatio = uploadedImage.width / uploadedImage.height;
+            let targetWidth = targetSize;
+            let targetHeight = targetSize;
+
+            if (imgRatio > 1) {
+                targetHeight = Math.round(targetSize / imgRatio);
+            } else {
+                targetWidth = Math.round(targetSize * imgRatio);
+            }
+
+            // 1. Draw downscaled image using direct hardware crisp scaling
             const tempCanvas = document.createElement('canvas');
             const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = targetSize;
-            tempCanvas.height = targetSize;
+            tempCanvas.width = targetWidth;
+            tempCanvas.height = targetHeight;
 
             tempCtx.imageSmoothingEnabled = false;
-            tempCtx.drawImage(uploadedImage, 0, 0, targetSize, targetSize);
+            tempCtx.drawImage(uploadedImage, 0, 0, targetWidth, targetHeight);
 
-            const imgData = tempCtx.getImageData(0, 0, targetSize, targetSize);
+            const imgData = tempCtx.getImageData(0, 0, targetWidth, targetHeight);
             const data = imgData.data;
 
-            // 2. Render as true sharp pixel squares on final canvas (No blur, solid pixel grids)
-            const scale = 12; // Output multiplier for sharp rendering size
-            canvas.width = targetSize * scale;
-            canvas.height = targetSize * scale;
+            // 2. Scale up cleanly for display keeping sharp pixel edges (No blurring or crushing)
+            const scale = 8;
+            canvas.width = targetWidth * scale;
+            canvas.height = targetHeight * scale;
 
             ctx.imageSmoothingEnabled = false;
 
-            for (let y = 0; y < targetSize; y++) {
-                for (let x = 0; x < targetSize; x++) {
-                    const i = (y * targetSize + x) * 4;
+            for (let y = 0; y < targetHeight; y++) {
+                for (let x = 0; x < targetWidth; x++) {
+                    const i = (y * targetWidth + x) * 4;
                     let r = data[i];
                     let g = data[i+1];
                     let b = data[i+2];
@@ -272,4 +284,5 @@
     </script>
 
 </body>
-</html>
+        </html>
+            
