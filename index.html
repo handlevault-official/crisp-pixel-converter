@@ -792,8 +792,36 @@
           if (keys[event.key.toLowerCase()]) {
             const button = document.querySelector(`[data-tool="${keys[event.key.toLowerCase()]}"]`);
             button.click();
-          }
+});
+
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 16px 4px;
+  color: #9da5b7;
+  font-size: 12px;
+}
+
+.site-footer a {
+  color: #ffd5e1;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .site-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
         }
+
       });
 
       renderGallery();
