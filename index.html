@@ -792,58 +792,29 @@
           if (keys[event.key.toLowerCase()]) {
             const button = document.querySelector(`[data-tool="${keys[event.key.toLowerCase()]}"]`);
             button.click();
-});
+          }
+        }
+      });
 
-.site-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-top: 20px;
-  padding: 16px 4px;
-  color: #9da5b7;
-  font-size: 12px;
-}
+      renderGallery();
+      newCanvas(32, 32);
+    })();
+  </script>
 
-.site-footer a {
-  color: #ffd5e1;
-  text-decoration: none;
-}
-
-.site-footer a:hover {
-  color: #fff;
-  text-decoration: underline;
-}
-
-<!-- 1. Ilagay ang CSS styles sa loob ng <style> tag -->
-<style>
-  @media (max-width: 480px) {
-    .site-footer {
-      align-items: flex-start;
-      flex-direction: column;
-    }
-  }
-</style>
-
-<!-- 2. Ang HTML footer ay dapat nasa labas ng CSS/Style tags -->
-<footer class="site-footer">
-  <span>© <span id="year"></span> Pixel Studio</span>
-  <a
-    href="https://ko-fi.com/Handlevaultofficial"
-    target="_blank"
-    rel="noopener noreferrer"
-  >☕ Buy me a Ko-fi</a>
-</footer>
-      
-<!-- 3. Malinis na script para sa taon at iba pa (Wala nang stray parentheses kung walang IIFE) -->
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  // Siguraduhing kung may renderGallery() at newCanvas() ka, 
-  // tawagin mo lang sila nang direkta o sa loob ng tamang function.
-  if (typeof renderGallery === 'function') renderGallery();
-  if (typeof newCanvas === 'function') newCanvas(32, 32);
-</script>
+  <!-- I-add ang Ko-fi footer DITO SA LABAS NG SCRIPT -->
+  <footer class="site-footer" style="text-align: center; padding: 1.5rem 1rem; font-size: 0.875rem; color: #64748b; background-color: #ffffff; border-top: 1px solid #e2e8f0; margin-top: auto;">
+    <span>© <span id="year"></span> Pixel Studio</span> • 
+    <a
+      href="https://ko-fi.com/Handlevaultofficial"
+      target="_blank"
+      rel="noopener noreferrer"
+      style="color: #db2777; font-weight: 600; text-decoration: underline; margin-left: 0.5rem;"
+    >☕ Buy me a Ko-fi</a>
+  </footer>
+        
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 
 </body>
 </html>
