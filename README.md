@@ -1,4 +1,4 @@
-# Pixel Studio
+# Crisp Pixel Studio
 
 **Pixel Studio** is a browser-based pixel-art editor for creating, editing, animating, converting, and sharing pixel art. It runs in your browser; your projects and gallery are stored locally on your device.
 
